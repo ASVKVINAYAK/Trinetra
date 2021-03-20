@@ -250,6 +250,40 @@ class AdminRegisterView(Resource):
             return not_found("Some fields are missing.")
 
 
+class DetailUserView(Resource):
+
+    def get(self, userId):
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            auth_token = auth_header.split(" ")[1]
+        else:
+            return not_found("Missing Authorization Token")
+        resp = decode_auth_token(auth_token)
+        if isinstance(resp, str):
+            return not_found(resp)
+        if resp["admin"] or userId == resp["id"]:
+            user = attendance.find_one({"phone": userId})
+            if user:
+                user.pop("_id", None)
+                user.pop("phone", None)
+                return jsonify(
+                    {
+                        "success": True,
+                        "attendance": user
+                    })
+            else:
+                return not_found("No Such User Exists")
+        else:
+            return not_found("Unauthorized User")
+
+    def post(self, userId):
+        return jsonify(
+            {
+                "success": False,
+                "message": "Method Not Allowed"
+            })
+
+
 @app.route("/uploads/<filename>")
 def uploaded_file(filename):
     return send_from_directory("uploads", filename, as_attachment=True)
@@ -315,11 +349,11 @@ attendance = mongo.db.attendance
 restServer = Api(app)
 
 restServer.add_resource(LoginView, "/login")
-restServer.add_resource(UserView, "/register", '/users')
+restServer.add_resource(UserView, "/register", '/user')
 restServer.add_resource(PasswordView, "/setIMEI")
 restServer.add_resource(ProfileView, "/profile")
 restServer.add_resource(AdminRegisterView, "/admin/register")
-# restServer.add_resource(AddLocation, "/saveLocation")
+restServer.add_resource(DetailUserView, "/user/<string:userId>")
 # restServer.add_resource(TaskById, "/api/v1/task/<string:taskId>")
 
 
