@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:trinetra/screens/Auth/signin_page.dart';
 
 import '../constants.dart';
 import 'HomePage.dart';
@@ -17,13 +18,22 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Future.microtask(() => _determinePosition())
-        .whenComplete(() => Navigator.pushAndRemoveUntil(
+    Future.microtask(() => _determinePosition()).whenComplete(() {
+      if (user == null)
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SigninPage(),
+            ),
+            (route) => false);
+      else
+        Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
               builder: (context) => HomePage(),
             ),
-            (route) => false));
+            (route) => false);
+    });
     super.initState();
   }
 
