@@ -1,0 +1,6 @@
+flask
+pymongo
+pymongo[srv]
+flask_pymongo
+requests
+flask_restful
