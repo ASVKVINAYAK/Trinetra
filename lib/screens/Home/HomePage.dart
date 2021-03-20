@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:trinetra/helper/localAuth_helper.dart';
+import 'package:trinetra/widgets/BubbleBottomBar.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
-  final String title;
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -26,78 +25,61 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final isAuthenticated = await LocalAuthHelper.authenticate();
 
           if (isAuthenticated) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
+            Fluttertoast.showToast(
+                msg: 'Authentication Sucessful!',
+                backgroundColor: Colors.greenAccent);
+            // Navigator.of(context).pushReplacement(
+            //   MaterialPageRoute(builder: (context) => HomePage()),
+            // );
+          } else {
+            Fluttertoast.showToast(
+                msg: 'Error Authenticating!', backgroundColor: Colors.red);
           }
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.indigo[900],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: BubbleBottomBar(
         hasNotch: true,
+        backgroundColor: Colors.indigo,
         fabLocation: BubbleBottomBarFabLocation.end,
         opacity: .2,
-        currentIndex: currentIndex,
+        currentIndex: currentIndex, tilesPadding: EdgeInsets.all(5),
         onTap: changePage,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(16),
-        ), //border radius doesn't work when the notch is enabled.
+        // borderRadius:
+        // BorderRadius.vertical(
+        //   top: Radius.circular(5),
+        // ), //border radius doesn't work when the notch is enabled.
         elevation: 8,
         items: <BubbleBottomBarItem>[
           BubbleBottomBarItem(
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.white,
               icon: Icon(
                 Icons.dashboard,
                 color: Colors.black,
               ),
               activeIcon: Icon(
                 Icons.dashboard,
-                color: Colors.red,
+                color: Colors.white,
               ),
-              title: Text("Home")),
+              title: Text("Dashboard")),
           BubbleBottomBarItem(
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Colors.white,
               icon: Icon(
-                Icons.access_time,
+                Icons.history_toggle_off_rounded,
                 color: Colors.black,
               ),
               activeIcon: Icon(
                 Icons.access_time,
-                color: Colors.deepPurple,
+                color: Colors.white,
               ),
-              title: Text("Logs")),
-          // BubbleBottomBarItem(
-          //     backgroundColor: Colors.indigo,
-          //     icon: Icon(
-          //       Icons.notifications,
-          //       color: Colors.black,
-          //     ),
-          //     activeIcon: Icon(
-          //       Icons.notifications,
-          //       color: Colors.indigo,
-          //     ),
-          //     title: Text("Notifications")),
-          // BubbleBottomBarItem(
-          //     backgroundColor: Colors.green,
-          //     icon: Icon(
-          //       Icons.person,
-          //       color: Colors.black,
-          //     ),
-          //     activeIcon: Icon(
-          //       Icons.person,
-          //       color: Colors.green,
-          //     ),
-          //     title: Text("Profile"))
+              title: Text("History")),
         ],
       ),
     );

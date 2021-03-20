@@ -98,7 +98,8 @@ class _MessageHandlerState extends State<MessageHandler> {
 
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
-    if (initialMessage?.data['type'] == 'chat') {}
+    // if (initialMessage?.data['type'] == 'chat') {}
+    log(initialMessage?.data?.toString() ?? 'No initial message');
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener

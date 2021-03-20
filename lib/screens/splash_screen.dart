@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:trinetra/constants.dart';
 
 import 'Home/HomePage.dart';
 
@@ -26,10 +25,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightTheme.scaffoldBackgroundColor,
+      backgroundColor: Colors.indigo[200],
       body: Center(
         child: Image.network(
-          'http://lh3.googleusercontent.com/tG38RRq2kEtzMsaAbzduW9kMbnpXjHuR0226snKQuDaAJd8IcCJUrEod5-hjUbGC6w=w300',
+          'https://lh3.googleusercontent.com/tG38RRq2kEtzMsaAbzduW9kMbnpXjHuR0226snKQuDaAJd8IcCJUrEod5-hjUbGC6w=w300',
           width: MediaQuery.of(context).size.width * 0.7,
         ),
       ),
