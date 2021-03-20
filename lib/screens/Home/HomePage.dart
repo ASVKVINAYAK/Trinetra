@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+import 'package:trinetra/helper/localAuth_helper.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -29,11 +30,19 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          final isAuthenticated = await LocalAuthHelper.authenticate();
+
+          if (isAuthenticated) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          }
+        },
         child: Icon(Icons.add),
         backgroundColor: Colors.red,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BubbleBottomBar(
         hasNotch: true,
         fabLocation: BubbleBottomBarFabLocation.end,
@@ -67,28 +76,28 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.deepPurple,
               ),
               title: Text("Logs")),
-          BubbleBottomBarItem(
-              backgroundColor: Colors.indigo,
-              icon: Icon(
-                Icons.notifications,
-                color: Colors.black,
-              ),
-              activeIcon: Icon(
-                Icons.notifications,
-                color: Colors.indigo,
-              ),
-              title: Text("Notifications")),
-          BubbleBottomBarItem(
-              backgroundColor: Colors.green,
-              icon: Icon(
-                Icons.person,
-                color: Colors.black,
-              ),
-              activeIcon: Icon(
-                Icons.person,
-                color: Colors.green,
-              ),
-              title: Text("Profile"))
+          // BubbleBottomBarItem(
+          //     backgroundColor: Colors.indigo,
+          //     icon: Icon(
+          //       Icons.notifications,
+          //       color: Colors.black,
+          //     ),
+          //     activeIcon: Icon(
+          //       Icons.notifications,
+          //       color: Colors.indigo,
+          //     ),
+          //     title: Text("Notifications")),
+          // BubbleBottomBarItem(
+          //     backgroundColor: Colors.green,
+          //     icon: Icon(
+          //       Icons.person,
+          //       color: Colors.black,
+          //     ),
+          //     activeIcon: Icon(
+          //       Icons.person,
+          //       color: Colors.green,
+          //     ),
+          //     title: Text("Profile"))
         ],
       ),
     );

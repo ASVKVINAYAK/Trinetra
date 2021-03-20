@@ -4,12 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_local_notifications/notification_details.dart';
-import 'package:flutter_local_notifications/platform_specifics/android/notification_details_android.dart';
-import 'package:flutter_local_notifications/platform_specifics/ios/notification_details_ios.dart';
-import 'package:trinetra/constants.dart';
-
 import 'screens/splash_screen.dart';
 
 void main() async {
@@ -24,7 +18,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Trinetra',
-      theme: lightTheme,
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
       home: MessageHandler(),
     );
   }
@@ -61,29 +58,9 @@ class _MessageHandlerState extends State<MessageHandler> {
 
   /// Get the token, save it to the database for current user
   _saveDeviceToken() async {
-    // Get the current user
-    // String uid = 'jeffd23';
-    // FirebaseUser user = await _auth.currentUser();
-
     // Get the token for this device
     String fcmToken = await _fcm.getToken();
     log(fcmToken);
-
-    /// Save it to Firestore
-    // if (fcmToken != null && user != null) {
-    //   var tokens = _db
-    //       .collection('resturants')
-    //       .doc(user.uid)
-    //       .collection('tokens')
-    //       .doc(fcmToken);
-    //   print(fcmToken);
-    //   if (tokens.get().then((value) => value.data()) == null)
-    //     await tokens.set({
-    //       'token': fcmToken,
-    //       'createdAt': FieldValue.serverTimestamp(), // optional
-    //       'platform': Platform.operatingSystem // optional
-    //     });
-    // }
   }
 
   initalizeFCM() async {
@@ -134,27 +111,28 @@ class _MessageHandlerState extends State<MessageHandler> {
 
     //
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
+      /// Down here is code for flutter local notification so `import package flutter_local_notification:`
+      //   RemoteNotification notification = message.notification;
+      //   AndroidNotification android = message.notification?.android;
 
-      // If `onMessage` is triggered with a notification, construct our own
-      // local notification to show to users using the created channel.
-      if (notification != null && android != null) {
-        FlutterLocalNotifications.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-                NotificationDetailsAndroid(
-                  "0",
-                  "New Message",
-                  message.notification.body,
-                  icon: android?.smallIcon,
-                  enableVibration: true,
-                  importance: Importance.High,
-                ),
-                NotificationDetailsIOS()));
-      }
+      //   // If `onMessage` is triggered with a notification, construct our own
+      //   // local notification to show to users using the created channel.
+      //   if (notification != null && android != null) {
+      //     FlutterLocalNotifications.show(
+      //         notification.hashCode,
+      //         notification.title,
+      //         notification.body,
+      //         NotificationDetails(
+      //             NotificationDetailsAndroid(
+      //               "0",
+      //               "New Message",
+      //               message.notification.body,
+      //               icon: android?.smallIcon,
+      //               enableVibration: true,
+      //               importance: Importance.High,
+      //             ),
+      //             NotificationDetailsIOS()));
+      //   }
     });
   }
 }
