@@ -6,6 +6,7 @@ import uuid
 import os
 import datetime
 import jwt
+import re
 # from api.login import Login
 # from api.register import Register
 # from flask_jwt import JWT, jwt_required, current_identity
@@ -208,13 +209,19 @@ class ProfileView(Resource):
         if lat and lon:
             now = datetime.datetime.now(timezone)
             now_str = now.strftime("%d-%m-%Y")
-            log = {"timestamp": now, "lat": lat, "lon": lon}
+            location = coords_collection.find_one({"id": "test"})
+            if not location:
+                return not_found("Location has not been set")
+            poly_map = MapPolygon(location.pop("location"))
+            available = poly_map.validate_point(Point(lon, lat))
+            log = {"timestamp": now, "lat": lat,
+                   "lon": lon, "available": available}
             attendance.update_one(
                 {"phone": resp['id']},
                 {
                     '$push': {now_str: log}
                 })
-            return jsonify({"success": True})
+            return jsonify({"success": True, "available": available})
         else:
             return not_found("Some fields are missing.")
 
@@ -284,6 +291,109 @@ class DetailUserView(Resource):
             })
 
 
+class KMLView(Resource):
+
+    def get(self):
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            auth_token = auth_header.split(" ")[1]
+        else:
+            return not_found("Missing Authorization Token")
+        resp = decode_auth_token(auth_token)
+        if isinstance(resp, str):
+            return not_found(resp)
+        if resp["admin"]:
+            location = coords_collection.find_one({"id": "test"})
+            if location:
+                location.pop("_id")
+                return jsonify({"success": True, **location})
+            return not_found("Location has not been set")
+        else:
+            return not_found("Unauthorized User")
+
+    def post(self):
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            auth_token = auth_header.split(" ")[1]
+        else:
+            return not_found("Missing Authorization Token")
+        resp = decode_auth_token(auth_token)
+        if isinstance(resp, str):
+            return not_found(resp)
+        data = request.form
+        if not data:
+            return not_found("Some fields are missing.")
+        place_name = data.get('name')
+        kml_file = request.files.get('kml')
+        if not (place_name and kml_file):
+            return not_found("Some fields are missing.")
+        kml_data = kml_file.read().decode()
+        pattern = r"(\d{2}\.\d{4,8}),(\d{2}\.\d{4,8}),\d+"
+        coords = re.findall(pattern, kml_data)
+        if resp["admin"]:
+            coords_collection.update_one(
+                {
+                    "id": "test"
+                },
+                {
+                    '$set': {
+                        'place': place_name,
+                        'location': Point.coords_serializer(coords)
+                    }
+                }, upsert=True)
+            location = coords_collection.find_one({"id": "test"})
+            if location:
+                location.pop("_id")
+                return jsonify({"success": True, **location})
+            return not_found("Some Error Occcured")
+        else:
+            return not_found("Unauthorized User")
+
+
+class Point:
+
+    def __init__(self, x=0, y=0):
+        self.x = float(x)
+        self.y = float(y)
+
+    @staticmethod
+    def coords_serializer(coords):
+        response = []
+        for coord in coords:
+            response.append(dict(lon=coord[0], lat=coord[1]))
+        return response
+
+    @staticmethod
+    def coords_deserializer(coords):
+        points = []
+        for coord in coords:
+            points.append(Point(coord["lon"], coord["lat"]))
+        return points
+
+
+class MapPolygon:
+
+    def __init__(self, coordinates):
+        self.points = Point.coords_deserializer(coordinates)
+
+    def validate_point(self, point):
+        p = point
+        p1 = self.points[0]
+        counter = 0
+        N = len(self.points)
+        for i in range(N+1):
+            p2 = self.points[i % N]
+            if (p.y > min(p1.y, p2.y)):
+                if(p.y <= max(p1.y, p2.y)):
+                    if(p.x <= max(p1.x, p2.x)):
+                        if(p1.y != p2.y):
+                            xint = (p.y-p1.y)*(p2.x-p1.x)/(p2.y-p1.y)+p1.x
+                            if (p1.x == p2.x or p[0] <= xint):
+                                counter += 1
+            p1 = p2
+        return counter % 2 != 0
+
+
 @app.route("/uploads/<filename>")
 def uploaded_file(filename):
     return send_from_directory("uploads", filename, as_attachment=True)
@@ -345,6 +455,7 @@ app.config['SECRET_KEY'] = 'secret_key'
 mongo = PyMongo(app)
 users = mongo.db.users
 attendance = mongo.db.attendance
+coords_collection = mongo.db.coordinates
 
 restServer = Api(app)
 
@@ -354,6 +465,7 @@ restServer.add_resource(PasswordView, "/setIMEI")
 restServer.add_resource(ProfileView, "/profile")
 restServer.add_resource(AdminRegisterView, "/admin/register")
 restServer.add_resource(DetailUserView, "/user/<string:userId>")
+restServer.add_resource(KMLView, "/admin/location")
 # restServer.add_resource(TaskById, "/api/v1/task/<string:taskId>")
 
 
