@@ -13,8 +13,9 @@ import re
 
 
 app = Flask(__name__)
-timezone = datetime.timezone(datetime.timedelta(
-    seconds=19800), 'India Standard Time')
+# timezone = datetime.timezone(datetime.timedelta(
+#     seconds=19800), 'India Standard Time')
+timezone = datetime.timezone.utc
 
 
 class LoginView(Resource):
@@ -83,13 +84,23 @@ class UserView(Resource):
             return jsonify(
                 {
                     "success": True,
-                    "count": user_list.count(),
+                    "count": user_list.retrieved,
                     "users": profile_list
                 })
         else:
             return not_found("Unauthorized User")
 
     def post(self):
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            auth_token = auth_header.split(" ")[1]
+        else:
+            return not_found("Missing Authorization Token")
+        resp = decode_auth_token(auth_token)
+        if isinstance(resp, str):
+            return not_found(resp)
+        if not resp["admin"]:
+            return not_found("Unauthorized User")
         data = request.form
         if not data:
             return not_found("Some fields are missing.")
@@ -102,6 +113,7 @@ class UserView(Resource):
                 photo.filename.split('.')[-1]
             photo.save(os.path.join("uploads", photo_name))
             photo_name = "/uploads/"+photo_name
+            now = datetime.datetime.now(timezone)
             users.update_one(
                 {
                     'employee_id': employee_id,
@@ -113,14 +125,23 @@ class UserView(Resource):
                         "name": name,
                         "phone": phone,
                         "photo": photo_name,
-                        "is_admin": False
+                        "is_admin": False,
+                        "overall": {
+                            "present": 0,
+                            "total": 0
+                        },
+                        "current": {
+                            "timestamp": now,
+                            "logs": []
+                        }
                     }
                 }, upsert=True)
             attendance.update_one(
                 {'phone': phone},
                 {
                     '$set': {
-                        'phone': phone
+                        'phone': phone,
+                        'logs': []
                     }
                 }, upsert=True)
             user = users.find_one({'employee_id': employee_id})
@@ -154,7 +175,8 @@ class PasswordView(Resource):
             return not_found("Missing IMEI Field")
         phone = resp['id']
         password = data.get('imei')
-        if password:
+        firebase_token = data.get('fcm')
+        if password and firebase_token:
             user = users.find_one({'phone': phone})
             if user.get("password") is None:
                 users.update_one(
@@ -162,7 +184,8 @@ class PasswordView(Resource):
                     {
                         '$set':
                         {
-                            "password": generate_password_hash(password)
+                            "password": generate_password_hash(password),
+                            "fcm": firebase_token
                         }
                     })
                 return jsonify({'success': True})
@@ -201,6 +224,9 @@ class ProfileView(Resource):
         resp = decode_auth_token(auth_token)
         if isinstance(resp, str):
             return not_found(resp)
+        user = users.find_one({'phone': resp['id']})
+        if not user:
+            return not_found("No such user exists")
         data = request.get_json()
         if not data:
             return not_found("Some fields are missing.")
@@ -208,7 +234,8 @@ class ProfileView(Resource):
         lon = data.get("lon")
         if lat and lon:
             now = datetime.datetime.now(timezone)
-            now_str = now.strftime("%d-%m-%Y")
+            datef = '%Y-%m-%d %H:%M:%S'
+            now_str = now.strftime(datef)
             location = coords_collection.find_one({"id": "test"})
             if not location:
                 return not_found("Location has not been set")
@@ -216,11 +243,37 @@ class ProfileView(Resource):
             available = poly_map.validate_point(Point(lon, lat))
             log = {"timestamp": now, "lat": lat,
                    "lon": lon, "available": available}
-            attendance.update_one(
-                {"phone": resp['id']},
-                {
-                    '$push': {now_str: log}
-                })
+            timediff = datetime.datetime.strptime(
+                now_str, datef)-user["current"].get("timestamp")
+            if (timediff < datetime.timedelta(hours=21)):
+                users.update_one(
+                    {'phone': resp['id']},
+                    {
+                        '$push': {"current.logs": log}
+                    })
+            else:
+                prev_logs = user["current"].get("logs", [])
+                p_count = int(all([prev_log["available"]
+                                   for prev_log in prev_logs]))
+                overall = user["overall"]
+                curr_logs = attendance.find_one(
+                    {"phone": resp['id']}).get("logs")
+                attendance.update_one(
+                    {"phone": resp['id']},
+                    {
+                        '$set': {"logs": curr_logs+prev_logs}
+                    })
+                users.update_one(
+                    {'phone': resp['id']},
+                    {
+                        '$set': {
+                            "overall.total": overall.get("total", 0)+1,
+                            "overall.present": overall.get("present")+p_count,
+                            "current.logs": [log],
+                            "current.timestamp": now
+                        }
+                    })
+
             return jsonify({"success": True, "available": available})
         else:
             return not_found("Some fields are missing.")
@@ -242,13 +295,16 @@ class AdminRegisterView(Resource):
         username = data.get('username')
         password = data.get('password')
         if username and password:
-            users.insert_one(
+            users.update_one(
+                {"phone": username},
                 {
-                    'employee_id': None,
-                    "phone": username,
-                    "password": generate_password_hash(password),
-                    "is_admin": True
-                })
+                    "$set": {
+                        'employee_id': None,
+                        "phone": username,
+                        "password": generate_password_hash(password),
+                        "is_admin": True
+                    }
+                }, upsert=True)
             user = users.find_one({'phone': username})
             user.pop("password", None)
             user.pop("_id", None)
@@ -271,12 +327,10 @@ class DetailUserView(Resource):
         if resp["admin"] or userId == resp["id"]:
             user = attendance.find_one({"phone": userId})
             if user:
-                user.pop("_id", None)
-                user.pop("phone", None)
                 return jsonify(
                     {
                         "success": True,
-                        "attendance": user
+                        "attendance": user.pop("logs", [])
                     })
             else:
                 return not_found("No Such User Exists")
@@ -388,7 +442,7 @@ class MapPolygon:
                     if(p.x <= max(p1.x, p2.x)):
                         if(p1.y != p2.y):
                             xint = (p.y-p1.y)*(p2.x-p1.x)/(p2.y-p1.y)+p1.x
-                            if (p1.x == p2.x or p[0] <= xint):
+                            if (p1.x == p2.x or p.x <= xint):
                                 counter += 1
             p1 = p2
         return counter % 2 != 0
