@@ -11,7 +11,7 @@ class IMEIHelper {
   // String uniqueId = "Unknown";
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  static Future<List<int>> getEncryptedIMEI() async {
+  static Future<String> getEncryptedIMEI() async {
     String platformImei;
     String idunique;
     // Platform messages may fail, so we use a try/catch PlatformException.
@@ -32,6 +32,6 @@ class IMEIHelper {
 
     log("Digest as bytes: ${digest.bytes}");
     log("Digest as hex string: $digest");
-    return digest.bytes;
+    return digest.toString();
   }
 }

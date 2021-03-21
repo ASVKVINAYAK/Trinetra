@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trinetra/screens/Auth/verify_otp.dart';
 import 'package:trinetra/screens/HomePage.dart';
 
@@ -17,11 +18,12 @@ class _SigninPageState extends State<SigninPage> {
   TextEditingController phoneController = new TextEditingController();
   TextEditingController otpController = new TextEditingController();
 
-  User _firebaseUser;
+  // User _firebaseUser;
   // ignore: unused_field
-  String _status;
+  String _status = '';
   bool isLoading = false;
 
+  // ignore: unused_field
   AuthCredential _phoneAuthCredential;
   String _verificationId;
   // ignore: unused_field
@@ -30,7 +32,7 @@ class _SigninPageState extends State<SigninPage> {
   @override
   void initState() {
     super.initState();
-    _getFirebaseUser();
+    // _getFirebaseUser();
   }
 
   @override
@@ -43,12 +45,12 @@ class _SigninPageState extends State<SigninPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               padding(32.0, 32.0),
-              // Center(
-              //   child: Container(
-              //     height: 250.0,
-              //     child: Image.asset('assets/phone_girl_verification.jpg'),
-              //   ),
-              // ),
+              Center(
+                child: Container(
+                  height: 250.0,
+                  child: Image.asset('assets/images/phoneauth.png'),
+                ),
+              ),
               Padding(
                   padding: EdgeInsets.only(top: 15.0, bottom: 20.0),
                   child: Text(
@@ -144,7 +146,7 @@ class _SigninPageState extends State<SigninPage> {
                       width: MediaQuery.of(context).size.width * .8,
                       child: TextButton(
                           onPressed: _submitPhoneNumber,
-                          child: Text("Send Code",
+                          child: Text("Login with OTP",
                               style: new TextStyle(
                                 color: Colors.white,
                                 fontSize: 20.0,
@@ -169,14 +171,6 @@ class _SigninPageState extends State<SigninPage> {
     Fluttertoast.showToast(msg: e.toString(), backgroundColor: Colors.red);
     setState(() {
       _status += e.message + '\n';
-    });
-  }
-
-  Future<void> _getFirebaseUser() async {
-    this._firebaseUser = FirebaseAuth.instance.currentUser;
-    setState(() {
-      _status =
-          (_firebaseUser == null) ? 'Not Logged In\n' : 'Already LoggedIn\n';
     });
   }
 
@@ -275,9 +269,11 @@ class _SigninPageState extends State<SigninPage> {
         this._phoneAuthCredential = PhoneAuthProvider.credential(
             verificationId: this._verificationId, smsCode: smsCode);
       });
-      await FirebaseAuth.instance.currentUser
-          .updatePhoneNumber(this._phoneAuthCredential);
-      Fluttertoast.showToast(msg: 'Phone No. Added Sucessful!');
+      // await FirebaseAuth.instance.currentUser
+      //     .updatePhoneNumber(this._phoneAuthCredential);
+      // Fluttertoast.showToast(msg: 'Phone No. Added Sucessful!');
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      await pref.setBool('loggedIn', true);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
@@ -288,19 +284,8 @@ class _SigninPageState extends State<SigninPage> {
           backgroundColor: Colors.red);
       log(e.toString());
     }
+    setState(() {
+      isLoading = false;
+    });
   }
-
-  // void _reset() {
-  //   phoneController.clear();
-  //   otpController.clear();
-  //   setState(() {
-  //     _status = "";
-  //   });
-  // }
-
-  // void _displayUser() {
-  //   setState(() {
-  //     _status += _firebaseUser.toString() + '\n';
-  //   });
-  // }
 }

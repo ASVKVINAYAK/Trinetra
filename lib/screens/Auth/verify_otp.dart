@@ -61,299 +61,292 @@ class _VerifyOTPState extends State<VerifyOTP> {
     double height = MediaQuery.of(context).size.height;
     // double width = MediaQuery.of(context).size.width;
     return new Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            height: height,
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                padding(25.0, 25.0),
-                // Center(
-                //   child: Container(
-                //     height: height * .4,
-                //     child: Image.asset('assets/otp_verification.jpg'),
-                //   ),
-                // ),
-                Padding(
-                    padding: EdgeInsets.only(top: 15.0, bottom: 20.0),
-                    child: Text(
-                      "Verify OTP",
-                      style: TextStyle(
-                          color: Colors.white,
+      body: SingleChildScrollView(
+        child: Container(
+          height: height,
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              padding(25.0, 25.0),
+              Center(
+                child: Container(
+                  height: height * .35,
+                  child: Image.asset('assets/images/otpverify.png'),
+                ),
+              ),
+              Padding(
+                  padding: EdgeInsets.only(top: 15.0, bottom: 20.0),
+                  child: Text(
+                    "Verify OTP",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 33.0,
+                        letterSpacing: 0.56),
+                  )),
+              padding(25.0, 25.0),
+              RichText(
+                  text: TextSpan(
+                      style: TextStyle(color: Colors.black87, fontSize: 13.0),
+                      children: [
+                    TextSpan(
+                        text: "Please enter the ",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.5,
+                        )),
+                    TextSpan(
+                        text: "OTP",
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 33.0,
-                          letterSpacing: 0.56),
-                    )),
-                padding(25.0, 25.0),
-                RichText(
-                    text: TextSpan(
-                        style: TextStyle(color: Colors.black87, fontSize: 13.0),
-                        children: [
-                      TextSpan(
-                          text: "Please enter the ",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14.5,
-                          )),
-                      TextSpan(
-                          text: "OTP",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                            fontSize: 14.5,
-                          )),
-                      TextSpan(
-                          text: " sent to ",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14.5,
-                          )),
-                    ])),
-                RichText(
-                    text: TextSpan(
-                        style: TextStyle(color: Colors.black87, fontSize: 13.0),
-                        children: [
-                      TextSpan(
-                          text: "mobile number +91 xxxxxxxxxx",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14.5,
-                          )),
-                    ])),
-                padding(20.0, 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                          color: Colors.grey,
+                          fontSize: 14.5,
+                        )),
+                    TextSpan(
+                        text: " sent to ",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.5,
+                        )),
+                  ])),
+              RichText(
+                  text: TextSpan(
+                      style: TextStyle(color: Colors.black87, fontSize: 13.0),
+                      children: [
+                    TextSpan(
+                        text: "mobile number +91 xxxxxxxxxx",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.5,
+                        )),
+                  ])),
+              padding(20.0, 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 40.0,
+                    height: 40.0,
+                    child: TextFormField(
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(1),
+                      ],
+                      // onEditingComplete: () =>
+                      //     FocusScope.of(context).nextFocus(),
+                      onChanged: (value) => FocusScope.of(context).nextFocus(),
+                      // textInputAction: TextInputAction.newline,
+                      textAlign: TextAlign.center,
+                      controller: digit1,
+                      enableInteractiveSelection: true,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        fillColor: Colors.black54,
+                        hoverColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                      ),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(left: 8.0, right: 8.0)),
+                  Container(
+                    width: 40.0,
+                    height: 40.0,
+                    child: TextFormField(
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(1),
+                      ],
+                      onChanged: (value) => FocusScope.of(context).nextFocus(),
+                      textAlign: TextAlign.center,
+                      controller: digit2,
+                      enableInteractiveSelection: true,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        fillColor: Colors.black54,
+                        hoverColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                      ),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(left: 8.0, right: 8.0)),
+                  Container(
+                    width: 40.0,
+                    height: 40.0,
+                    child: TextFormField(
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(1),
+                      ],
+                      onChanged: (value) => FocusScope.of(context).nextFocus(),
+                      textAlign: TextAlign.center,
+                      controller: digit3,
+                      enableInteractiveSelection: true,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        fillColor: Colors.black54,
+                        hoverColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                      ),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(left: 8.0, right: 8.0)),
+                  Container(
+                    width: 40.0,
+                    height: 40.0,
+                    child: TextFormField(
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(1),
+                      ],
+                      onChanged: (value) => FocusScope.of(context).nextFocus(),
+                      textAlign: TextAlign.center,
+                      controller: digit4,
+                      enableInteractiveSelection: true,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        fillColor: Colors.black54,
+                        hoverColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                      ),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(left: 8.0, right: 8.0)),
+                  Container(
+                    width: 40.0,
+                    height: 40.0,
+                    child: TextFormField(
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(1),
+                      ],
+                      onChanged: (value) => FocusScope.of(context).nextFocus(),
+                      controller: digit5,
+                      enableInteractiveSelection: true,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        fillColor: Colors.black54,
+                        hoverColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                      ),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(left: 8.0, right: 8.0)),
+                  Container(
+                    width: 40.0,
+                    height: 40.0,
+                    child: TextFormField(
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(1),
+                      ],
+                      onChanged: (value) => FocusScope.of(context).unfocus(),
+                      // maxLength: 1,
+                      textAlign: TextAlign.center,
+                      controller: digit6,
+                      enableInteractiveSelection: true,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        fillColor: Colors.black54,
+                        hoverColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              padding(15.0),
+              Text(
+                "Expiring In 00:$_start ",
+                style: TextStyle(
+                  color: Colors.white60,
+                  fontSize: 12.0,
+
+                  // letterSpacing: 0.85,
+                ),
+              ),
+
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  // splashColor: Colors.pink[200],
+                  child: Text(
+                    "RESEND CODE",
+                    style: TextStyle(
+                      color: Colors.amber,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.85,
+                    ),
+                  )),
+              // padding(height / 22),
+              Spacer(),
+              Align(
+                alignment: AlignmentDirectional.center,
+                child: Column(
                   children: [
-                    Container(
-                      width: 40.0,
-                      height: 40.0,
-                      child: TextFormField(
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(1),
-                        ],
-                        // onEditingComplete: () =>
-                        //     FocusScope.of(context).nextFocus(),
-                        onChanged: (value) =>
-                            FocusScope.of(context).nextFocus(),
-                        // textInputAction: TextInputAction.newline,
-                        textAlign: TextAlign.center,
-                        controller: digit1,
-                        enableInteractiveSelection: true,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          fillColor: Colors.black54,
-                          hoverColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black54),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0))),
-                        ),
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.only(left: 8.0, right: 8.0)),
-                    Container(
-                      width: 40.0,
-                      height: 40.0,
-                      child: TextFormField(
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(1),
-                        ],
-                        onChanged: (value) =>
-                            FocusScope.of(context).nextFocus(),
-                        textAlign: TextAlign.center,
-                        controller: digit2,
-                        enableInteractiveSelection: true,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          fillColor: Colors.black54,
-                          hoverColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black54),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0))),
-                        ),
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.only(left: 8.0, right: 8.0)),
-                    Container(
-                      width: 40.0,
-                      height: 40.0,
-                      child: TextFormField(
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(1),
-                        ],
-                        onChanged: (value) =>
-                            FocusScope.of(context).nextFocus(),
-                        textAlign: TextAlign.center,
-                        controller: digit3,
-                        enableInteractiveSelection: true,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          fillColor: Colors.black54,
-                          hoverColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black54),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0))),
-                        ),
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.only(left: 8.0, right: 8.0)),
-                    Container(
-                      width: 40.0,
-                      height: 40.0,
-                      child: TextFormField(
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(1),
-                        ],
-                        onChanged: (value) =>
-                            FocusScope.of(context).nextFocus(),
-                        textAlign: TextAlign.center,
-                        controller: digit4,
-                        enableInteractiveSelection: true,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          fillColor: Colors.black54,
-                          hoverColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black54),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0))),
-                        ),
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.only(left: 8.0, right: 8.0)),
-                    Container(
-                      width: 40.0,
-                      height: 40.0,
-                      child: TextFormField(
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(1),
-                        ],
-                        onChanged: (value) =>
-                            FocusScope.of(context).nextFocus(),
-                        controller: digit5,
-                        enableInteractiveSelection: true,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          fillColor: Colors.black54,
-                          hoverColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black54),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0))),
-                        ),
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.only(left: 8.0, right: 8.0)),
-                    Container(
-                      width: 40.0,
-                      height: 40.0,
-                      child: TextFormField(
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(1),
-                        ],
-                        onChanged: (value) => FocusScope.of(context).unfocus(),
-                        // maxLength: 1,
-                        textAlign: TextAlign.center,
-                        controller: digit6,
-                        enableInteractiveSelection: true,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          fillColor: Colors.black54,
-                          hoverColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black54),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0))),
-                        ),
-                      ),
+                    isLoading
+                        ? CircularProgressIndicator()
+                        : Container(
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).buttonColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
+                            height: 45.0,
+                            width: MediaQuery.of(context).size.width * .8,
+                            child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  widget.veryfyOtp(digit1.text +
+                                      digit2.text +
+                                      digit3.text +
+                                      digit4.text +
+                                      digit5.text +
+                                      digit6.text);
+                                },
+                                child: Text("Verify",
+                                    style: new TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24.0,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.6,
+                                    )))),
+                    padding(5.0),
+                    GestureDetector(
+                      onTap: () {
+                        // showDialog(context);
+                        Navigator.pop(context);
+                      },
+                      child: Text("Change Mobile Number",
+                          style: new TextStyle(
+                            color: Colors.black,
+                            fontSize: 13.5,
+                          )),
                     ),
                   ],
                 ),
-                padding(15.0),
-                Text(
-                  "Expiring In 00:$_start ",
-                  style: TextStyle(
-                    color: Colors.white60,
-                    fontSize: 12.0,
-
-                    // letterSpacing: 0.85,
-                  ),
-                ),
-
-                TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    // splashColor: Colors.pink[200],
-                    child: Text(
-                      "RESEND CODE",
-                      style: TextStyle(
-                        color: Colors.amber,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.85,
-                      ),
-                    )),
-                // padding(height / 22),
-                Spacer(),
-                Align(
-                  alignment: AlignmentDirectional.center,
-                  child: Column(
-                    children: [
-                      isLoading
-                          ? CircularProgressIndicator()
-                          : Container(
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).buttonColor,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(30))),
-                              height: 45.0,
-                              width: MediaQuery.of(context).size.width * .8,
-                              child: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    widget.veryfyOtp(digit1.text +
-                                        digit2.text +
-                                        digit3.text +
-                                        digit4.text +
-                                        digit5.text +
-                                        digit6.text);
-                                  },
-                                  child: Text("Verify",
-                                      style: new TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24.0,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 0.6,
-                                      )))),
-                      padding(5.0),
-                      GestureDetector(
-                        onTap: () {
-                          // showDialog(context);
-                          Navigator.pop(context);
-                        },
-                        child: Text("Change Mobile Number",
-                            style: new TextStyle(
-                              color: Colors.black,
-                              fontSize: 13.5,
-                            )),
-                      ),
-                    ],
-                  ),
-                ),
-                padding(height * .02, height * .02),
-              ],
-            ),
+              ),
+              padding(height * .02, height * .02),
+            ],
           ),
         ),
       ),

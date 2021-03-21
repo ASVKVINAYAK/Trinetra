@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:trinetra/screens/Auth/signin_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trinetra/helper/imei_helper.dart';
+import 'package:trinetra/screens/onboard/welcome.dart';
 
 import '../constants.dart';
 import 'HomePage.dart';
@@ -16,14 +18,21 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool isUserLoggedIn = false;
   @override
   void initState() {
-    Future.microtask(() => _determinePosition()).whenComplete(() {
-      if (user == null)
+    Future.microtask(() async {
+      await _determinePosition();
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      isUserLoggedIn = pref.getBool('loggedIn') ?? false;
+      var hashIMEI = await IMEIHelper.getEncryptedIMEI();
+      log(hashIMEI.toString());
+    }).whenComplete(() {
+      if (!isUserLoggedIn)
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => SigninPage(),
+              builder: (context) => Welcome(),
             ),
             (route) => false);
       else
