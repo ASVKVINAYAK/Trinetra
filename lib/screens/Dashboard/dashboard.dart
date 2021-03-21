@@ -67,6 +67,7 @@ class Dashboard extends StatelessWidget {
                     backgroundColor: Colors.indigo[200],
                     radius: 50,
                     backgroundImage: NetworkImage(
+                      // 'http://213.188.253.139:5001/upload/4cd5530f-6eb1-4904-8c24-21056486d524.jpg'
                       'https://media.gettyimages.com/photos/portrait-of-smiling-mid-adult-man-wearing-tshirt-picture-id985138674?k=6&m=985138674&s=612x612&w=0&h=1arYWaa0TsYnwz2LyvLV5qPKCiyUufFljDjjTdI5mkQ=',
                     ),
                   ),
@@ -95,6 +96,62 @@ class Dashboard extends StatelessWidget {
 
             /// Attendence card
             AttendenceCard(size: size),
+
+            /// Current Attendance
+            Container(
+              margin: EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white12,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              width: size.width,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Today\'s Attendence',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white60,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    width: size.width * 0.9,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Icon(
+                          Icons.beenhere_rounded,
+                          color: Colors.green[900],
+                        ),
+                        Icon(
+                          Icons.beenhere_rounded,
+                          color: Colors.green[900],
+                        ),
+                        Icon(
+                          Icons.beenhere_rounded,
+                          color: Colors.green[900],
+                        ),
+                        Icon(
+                          Icons.beenhere_outlined,
+                          color: Colors.blueGrey,
+                        ),
+                        Icon(
+                          Icons.beenhere_outlined,
+                          color: Colors.blueGrey,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

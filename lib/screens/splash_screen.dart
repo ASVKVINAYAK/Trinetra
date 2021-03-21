@@ -24,11 +24,12 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.microtask(() async {
       await _determinePosition();
       SharedPreferences pref = await SharedPreferences.getInstance();
-      isUserLoggedIn = pref.getBool('loggedIn') ?? false;
+      phone = pref.getString('phone') ?? null;
+      isUserLoggedIn = (phone != null);
       var hashIMEI = await IMEIHelper.getEncryptedIMEI();
       log(hashIMEI.toString());
     }).whenComplete(() {
-      if (!isUserLoggedIn)
+      if (isUserLoggedIn)
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(

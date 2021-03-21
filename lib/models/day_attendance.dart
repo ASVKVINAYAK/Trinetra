@@ -6,14 +6,13 @@ import 'package:meta/meta.dart';
 import 'dart:convert';
 
 class DayAttendence {
-  DayAttendence(
-      {@required this.dateTime,
-      @required this.attendence,
-      @required this.success});
+  DayAttendence({
+    @required this.attendence,
+    @required this.status,
+  });
 
-  final DateTime dateTime;
   final List<Attendence> attendence;
-  final bool success;
+  final bool status;
 
   factory DayAttendence.fromJson(String str) =>
       DayAttendence.fromMap(json.decode(str));
@@ -21,15 +20,14 @@ class DayAttendence {
   String toJson() => json.encode(toMap());
 
   factory DayAttendence.fromMap(Map<String, dynamic> json) => DayAttendence(
-      dateTime: DateTime.parse(json["dateTime"]),
-      attendence: List<Attendence>.from(
-          json["attendence"].map((x) => Attendence.fromMap(x))),
-      success: json['success']);
+        attendence: List<Attendence>.from(
+            json["attendence"].map((x) => Attendence.fromMap(x))),
+        status: json["status"],
+      );
 
   Map<String, dynamic> toMap() => {
-        "dateTime": dateTime.toIso8601String(),
         "attendence": List<dynamic>.from(attendence.map((x) => x.toMap())),
-        "success": success,
+        "status": status,
       };
 }
 
@@ -38,11 +36,13 @@ class Attendence {
     @required this.lat,
     @required this.lon,
     @required this.timestamp,
+    @required this.available,
   });
 
-  final String lat;
-  final String lon;
+  final double lat;
+  final double lon;
   final DateTime timestamp;
+  final bool available;
 
   factory Attendence.fromJson(String str) =>
       Attendence.fromMap(json.decode(str));
@@ -50,14 +50,16 @@ class Attendence {
   String toJson() => json.encode(toMap());
 
   factory Attendence.fromMap(Map<String, dynamic> json) => Attendence(
-        lat: json["lat"],
-        lon: json["lon"],
+        lat: double.parse(json["lat"]),
+        lon: double.parse(json["lon"]),
         timestamp: DateTime.parse(json["timestamp"]),
+        available: json["available"],
       );
 
   Map<String, dynamic> toMap() => {
-        "lat": lat,
-        "lon": lon,
+        "lat": lat.toString(),
+        "lon": lon.toString(),
         "timestamp": timestamp.toIso8601String(),
+        "available": available,
       };
 }
