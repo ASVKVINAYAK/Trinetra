@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:trinetra/helper/localAuth_helper.dart';
 import 'package:trinetra/screens/Dashboard/dashboard.dart';
+import 'package:trinetra/screens/History/history.dart';
 import 'package:trinetra/widgets/BubbleBottomBar.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: currentIndex == 0 ? Dashboard() : Material(child: Container()),
+        body: currentIndex == 0 ? Dashboard() : History(),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             final isAuthenticated = await LocalAuthHelper.authenticate();
@@ -48,7 +49,7 @@ class _HomePageState extends State<HomePage> {
             Icons.add,
             color: Colors.white,
           ),
-          backgroundColor: Colors.indigo[400],
+          // backgroundColor: Colors.indigo[400],
           elevation: 0,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,

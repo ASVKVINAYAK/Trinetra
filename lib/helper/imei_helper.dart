@@ -30,8 +30,8 @@ class IMEIHelper {
 
     var digest = sha1.convert(bytes);
 
-    log("Digest as bytes: ${digest.bytes}");
-    log("Digest as hex string: $digest");
+    // log("Digest as bytes: ${digest.bytes}");
+    // log("Digest as hex string: $digest");
     return digest.toString();
   }
 }

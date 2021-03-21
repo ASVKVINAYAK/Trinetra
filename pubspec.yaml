@@ -29,6 +29,7 @@ dependencies:
   geolocator: ^7.0.1
   google_fonts: ^2.0.0
   imei_plugin: ^1.2.0
+  intl: any
   local_auth: ^1.1.0
   shared_preferences: ^2.0.0
 
