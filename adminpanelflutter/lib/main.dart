@@ -1,6 +1,7 @@
+import 'package:adminpanelflutter/pages/homeUI.dart';
+import 'package:adminpanelflutter/services/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:adminpanelflutter/pages/home.dart';
 import 'package:adminpanelflutter/pages/table.dart';
 
 void main() async {
@@ -17,14 +18,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
-        "/home": (context) => HomeScreen(),
+        "/home": (context) => LoginUI(),
         "/table": (context) => TableScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      home: LoginUI(),
     );
   }
 }
