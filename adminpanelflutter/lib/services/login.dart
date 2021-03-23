@@ -74,11 +74,11 @@ class _logUI extends State<LoginUI> {
                   children: <Widget>[
                   TextFormField(
                   controller: phone,
-                  decoration: InputDecoration(labelText: ' Enter Email'),
+                  decoration: InputDecoration(labelText: ' Enter Phone no'),
                 ),
                 TextFormField(
                   controller: imei,
-                  decoration: InputDecoration(labelText: 'Enter Password'),
+                  decoration: InputDecoration(labelText: 'Enter IMEI'),
                 ),
                 SizedBox(
                   height: 80,
