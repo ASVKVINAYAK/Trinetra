@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:adminpanelflutter/common/base.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreenUI extends StatefulWidget {
@@ -20,12 +19,6 @@ var COLORS = [
 ];
 class _HomeUI extends State<HomeScreenUI> {
 
-  void fetchdata()
-  async{
-      var r= await Dio().get('https://213.188.253.139:5001/login');
-      print("abcd");
-      print(r.data.toString());
-  }
 
   var data = [
     {
@@ -98,8 +91,6 @@ class _HomeUI extends State<HomeScreenUI> {
 
   @override
   Widget build(BuildContext context) {
-
-    fetchdata();
     return BaseScreen(
       title: "Dashboard",
       body: Container(

@@ -1,5 +1,5 @@
-import 'package:adminpanelflutter/pages/homeUI.dart';
 import 'package:adminpanelflutter/services/login.dart';
+import 'package:adminpanelflutter/services/loginUI.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:adminpanelflutter/pages/table.dart';
@@ -18,14 +18,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
-        "/home": (context) => LoginUI(),
+        "/home": (context) => LoginPage(),
         "/table": (context) => TableScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginUI(),
+      home: LoginPage(),
     );
   }
 }
