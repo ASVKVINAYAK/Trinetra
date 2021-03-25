@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory, render_template
 from flask_restful import Resource, Api
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,6 +7,7 @@ import os
 import datetime
 import jwt
 import re
+import requests
 # from api.login import Login
 # from api.register import Register
 # from flask_jwt import JWT, jwt_required, current_identity
@@ -345,7 +346,7 @@ class DetailUserView(Resource):
             })
 
 
-class KMLView(Resource):
+class GeoView(Resource):
 
     def get(self):
         auth_header = request.headers.get('Authorization')
@@ -374,16 +375,13 @@ class KMLView(Resource):
         resp = decode_auth_token(auth_token)
         if isinstance(resp, str):
             return not_found(resp)
-        data = request.form
+        data = request.get_json()
         if not data:
             return not_found("Some fields are missing.")
-        place_name = data.get('name')
-        kml_file = request.files.get('kml')
-        if not (place_name and kml_file):
+        place_name = data.get('name') or "Test Area"
+        geo_data = data.get('geodata')
+        if not (place_name and geo_data):
             return not_found("Some fields are missing.")
-        kml_data = kml_file.read().decode()
-        pattern = r"(\d{2}\.\d{4,8}),(\d{2}\.\d{4,8}),\d+"
-        coords = re.findall(pattern, kml_data)
         if resp["admin"]:
             coords_collection.update_one(
                 {
@@ -392,7 +390,7 @@ class KMLView(Resource):
                 {
                     '$set': {
                         'place': place_name,
-                        'location': Point.coords_serializer(coords)
+                        'location': Point.coords_serializer(geo_data)
                     }
                 }, upsert=True)
             location = coords_collection.find_one({"id": "test"})
@@ -446,6 +444,66 @@ class MapPolygon:
                                 counter += 1
             p1 = p2
         return counter % 2 != 0
+
+
+class MapView:
+
+    def __init__(self, location):
+        self.location = location
+
+    def location_coords(self):
+        res = requests.get(
+            "https://www.google.com/maps/search/{}/".format(
+                self.location)).text
+        pattern = (r"https://maps\.google\.com/maps/api/staticmap"
+                   r"\?center=(.+?)&amp;zoom=(\d+)")
+        match = re.search(pattern, res)
+        self.lat, self.lon = map(float, match.group(1).split('%2C'))
+        self.zoom = int(match.group(2))
+
+        return dict(lat=self.lat, lon=self.lon, zoom=self.zoom)
+
+
+@app.route("/admin/map", methods=["GET", "POST", "PUT"])
+def mapView():
+    # auth_header = request.headers.get('Authorization')
+    # if auth_header:
+    #     auth_token = auth_header.split(" ")[1]
+    # else:
+    #     return not_found("Missing Authorization Token")
+    # resp = decode_auth_token(auth_token)
+    # if isinstance(resp, str):
+    #     return not_found(resp)
+    # if resp["admin"]:
+    #     location = coords_collection.find_one({"id": "test"})
+    #     if location:
+    #         location.pop("_id")
+    #         return jsonify({"success": True, **location})
+    #     return not_found("Location has not been set")
+    # else:
+    #     return not_found("Unauthorized User")
+    if request.method == 'GET':
+        return render_template("mapbox.html")
+    elif request.method == 'POST':
+        coords = MapView(request.get_json().get("location")).location_coords()
+        print(coords)
+        return jsonify(coords)
+    else:
+        geo_data = request.get_json().get("geoData")
+        if not geo_data:
+            return not_found("Missing Coordinates")
+        fgeo_data = Point.coords_serializer(geo_data[0])
+        coords_collection.update_one(
+            {
+                "id": "test"
+            },
+            {
+                '$set': {
+                    'location': fgeo_data
+                }
+            }, upsert=True)
+        return jsonify(
+            {"status": True, "message": "The location data is updated"})
 
 
 @app.route("/uploads/<filename>")
@@ -503,7 +561,9 @@ def encode_auth_token(user_id, is_admin=False):
 
 
 app.config['MONGODB_NAME'] = 'hackathon'
-app.config['MONGO_URI'] = 'mongodb+srv://gnosticplayer:pass12345@cluster0.qarzu.mongodb.net/hackathon?retryWrites=true&w=majority'
+app.config['MONGO_URI'] = ('mongodb+srv://gnosticplayer:pass12345'
+                           '@cluster0.qarzu.mongodb.net/hackathon'
+                           '?retryWrites=true&w=majority')
 app.config['SECRET_KEY'] = 'secret_key'
 
 mongo = PyMongo(app)
@@ -519,7 +579,8 @@ restServer.add_resource(PasswordView, "/setIMEI")
 restServer.add_resource(ProfileView, "/profile")
 restServer.add_resource(AdminRegisterView, "/admin/register")
 restServer.add_resource(DetailUserView, "/user/<string:userId>")
-restServer.add_resource(KMLView, "/admin/location")
+restServer.add_resource(GeoView, "/admin/location")
+# restServer.add_resource(MapBoxView, "/admin/location")
 # restServer.add_resource(TaskById, "/api/v1/task/<string:taskId>")
 
 
