@@ -70,7 +70,7 @@ class History extends StatelessWidget {
                   );
                 },
                 order: GroupedListOrder.DESC,
-                // reverse: true,
+                reverse: true,
                 floatingHeader: true,
                 useStickyGroupSeparators: true,
                 groupBy: (Attendence element) => DateTime(

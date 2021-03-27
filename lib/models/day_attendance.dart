@@ -50,15 +50,15 @@ class Attendence {
   String toJson() => json.encode(toMap());
 
   factory Attendence.fromMap(Map<String, dynamic> json) => Attendence(
-        lat: double.parse(json["lat"]),
-        lon: double.parse(json["lon"]),
+        lat: double.parse(json["lat"].toString()),
+        lon: double.parse(json["lon"].toString()),
         timestamp: DateTime.parse(json["timestamp"]),
         available: json["available"],
       );
 
   Map<String, dynamic> toMap() => {
-        "lat": lat.toString(),
-        "lon": lon.toString(),
+        "lat": lat,
+        "lon": lon,
         "timestamp": timestamp.toIso8601String(),
         "available": available,
       };

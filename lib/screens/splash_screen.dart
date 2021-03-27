@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trinetra/helper/api_helper.dart';
 import 'package:trinetra/helper/imei_helper.dart';
 import 'package:trinetra/screens/onboard/welcome.dart';
 
@@ -19,10 +20,12 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool isUserLoggedIn = false;
+  final ApiHelper _apiHelper = new ApiHelper();
   @override
   void initState() {
     Future.microtask(() async {
       await _determinePosition();
+      await _apiHelper.login();
       SharedPreferences pref = await SharedPreferences.getInstance();
       phone = pref.getString('phone') ?? null;
       isUserLoggedIn = (phone != null);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:trinetra/helper/api_helper.dart';
 import 'package:trinetra/helper/localAuth_helper.dart';
 import 'package:trinetra/screens/Dashboard/dashboard.dart';
 import 'package:trinetra/screens/History/history.dart';
@@ -31,19 +32,22 @@ class _HomePageState extends State<HomePage> {
         body: currentIndex == 0 ? Dashboard() : History(),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final isAuthenticated = await LocalAuthHelper.authenticate();
+            final ApiHelper _api = new ApiHelper();
+            await _api.login();
+            await _api.getProfile();
+            // final isAuthenticated = await LocalAuthHelper.authenticate();
 
-            if (isAuthenticated) {
-              Fluttertoast.showToast(
-                  msg: 'Authentication Sucessful!',
-                  backgroundColor: Colors.greenAccent);
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(builder: (context) => HomePage()),
-              // );
-            } else {
-              Fluttertoast.showToast(
-                  msg: 'Error Authenticating!', backgroundColor: Colors.red);
-            }
+            // if (isAuthenticated) {
+            //   Fluttertoast.showToast(
+            //       msg: 'Authentication Sucessful!',
+            //       backgroundColor: Colors.greenAccent);
+            //   // Navigator.of(context).pushReplacement(
+            //   //   MaterialPageRoute(builder: (context) => HomePage()),
+            //   // );
+            // } else {
+            //   Fluttertoast.showToast(
+            //       msg: 'Error Authenticating!', backgroundColor: Colors.red);
+            // }
           },
           child: Icon(
             Icons.add,
