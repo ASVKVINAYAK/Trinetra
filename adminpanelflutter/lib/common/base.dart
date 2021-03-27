@@ -43,7 +43,7 @@ class BaseScreen extends StatelessWidget {
                     slivers: [
                       SliverAppBar(
                         title: Text(
-                          "${this.title != null ? this.title : 'Flutter Admin Panel'}",
+                          "Trinetra Admin Panel",
                           style: TextStyle(
                             color: Colors.black54,
                             fontWeight: FontWeight.bold,

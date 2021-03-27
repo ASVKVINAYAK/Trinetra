@@ -51,36 +51,9 @@ class _logUI extends State<LoginUI> {
 
       }
   }
-
-
- getData() async {
-    print("xyz");
-
-   // Map body={"phone":"9090999999",
-   //   "imei":"12345"};
-   // var url=Uri.parse('http://213.188.253.139:5001/login');
-   // var res=await http.post(url,body: body);
-   // print('Response status: ${res.statusCode}');
-   // print('Response body: ${res.body}');
-
-
-    Map body={"phone":"9090999999", "imei":"12345"};
-   var url=Uri.http('213.188.253.139:5001','/login',{"phone":"9090999999", "imei":"12345"});
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      var token = jsonResponse['token'];
-      print('Token is : $token.');
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-    }
-
-    }
-
   @override
   Widget build(BuildContext context)
   {
-    getData();
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(

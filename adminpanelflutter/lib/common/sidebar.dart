@@ -17,7 +17,7 @@ class Sidebar extends StatelessWidget {
             DrawerHeader(
               child: Center(
                 child: Text(
-                  "Flutter Admin Panel",
+                  "Trinetra Admin Panel",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,

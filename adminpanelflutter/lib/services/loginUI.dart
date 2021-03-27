@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:adminpanelflutter/pages/homeUI.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
@@ -15,13 +17,16 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController imei = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     final logo = Hero(
       tag: 'hero',
       child: SizedBox(
+        height: 500,
+        width: 50,
         child: Image.network(
-          "https://raw.githubusercontent.com/ASVKVINAYAK/HC-QS/main/WhatsApp%20Image%202021-03-21%20at%207.19.14%20PM.jpeg",
-          fit: BoxFit.fill,
+"https://raw.githubusercontent.com/ASVKVINAYAK/Trinetra/admin-panel/th.jpeg",
+          fit: BoxFit.cover,
         ),
       ),
     );
@@ -54,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
           String i=imei.text;
           print(p);
           print(i);
-          if(p=="9090999999" && i=="12345")
+          if(p=="admin" && i=="admin123")
             {
               Fluttertoast.showToast(
                   msg: "Welcome Back",
@@ -105,11 +110,11 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.only(left: 24.0, right: 24.0),
           children: <Widget>[
             logo,
-            SizedBox(height: 48.0),
+            SizedBox(height: 48.0,width: 30,),
             email,
-            SizedBox(height: 8.0),
+            SizedBox(height: 8.0,width: 30,),
             password,
-            SizedBox(height: 24.0),
+            SizedBox(height: 24.0,width: 30,),
             loginButton,
           ],
         ),

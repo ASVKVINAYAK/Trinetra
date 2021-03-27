@@ -1,0 +1,41 @@
+import 'dart:convert';
+import 'package:adminpanelflutter/services/Userdata.dart';
+import 'package:http/http.dart' as http;
+
+class userdetails{
+   String uid;
+  String ud;
+
+getData() async {
+    print("xyz");
+    Map body = {"username": "admin",
+      "password": "admin123"};
+    var url = Uri.parse('https://techspace-trinetra.herokuapp.com/login');
+    Map<String, String> headtoken = {
+      'Content-type': 'application/json; charset=UTF-8',
+    };
+    var restoken = await http.post(
+        url, body: jsonEncode(body), headers: headtoken);
+    print('Response status: ${restoken.statusCode}');
+    var admindata = jsonDecode(restoken.body);
+    String token = admindata['token'];
+    print(token);
+
+    Map<String, String> headuser = {
+      'Content-type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    var urluser = Uri.parse('https://techspace-trinetra.herokuapp.com/user');
+    var resuser = await http.get(urluser, headers: headuser);
+    print(resuser.body);
+    var ui = userFromJson(resuser.body);
+    List<UserElement> d = ui.users;
+
+    String x="${d[0].employeeId}";
+    String y="Name: ${d[0].name} \n ";
+    this.uid=x;
+    this.ud=y;
+  }
+
+}
