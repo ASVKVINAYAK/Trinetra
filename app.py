@@ -9,6 +9,7 @@ import datetime
 import jwt
 import re
 import requests
+import json
 # from api.login import Login
 # from api.register import Register
 # from flask_jwt import JWT, jwt_required, current_identity
@@ -82,6 +83,7 @@ class UserView(Resource):
             for user in user_list:
                 user.pop("password", None)
                 user.pop("_id", None)
+                user = json.loads(json.dumps(user, default=iso_convert))
                 profile_list.append(user)
             return jsonify(
                 {
@@ -215,7 +217,17 @@ class ProfileView(Resource):
         user = users.find_one({'phone': resp['id']})
         user.pop("password", None)
         user.pop("_id", None)
-        return jsonify({"success": True, **user})
+        user.update({"status": True})
+        return app.response_class(
+            response=json.dumps(user, default=iso_convert),
+            status=200,
+            mimetype='application/json'
+        )
+        # return jsonify(
+        #     {
+        #         "success": True,
+        #         **json.loads(json.dumps(user, default=iso_convert))
+        #     })
 
     def post(self):
         auth_header = request.headers.get('Authorization')
@@ -310,7 +322,13 @@ class AdminRegisterView(Resource):
             user = users.find_one({'phone': username})
             user.pop("password", None)
             user.pop("_id", None)
-            return jsonify({'success': True, **user})
+            user.update({"status": True})
+            return app.response_class(
+                response=json.dumps(user, default=iso_convert),
+                status=200,
+                mimetype='application/json'
+            )
+            # return jsonify({'success': True, **user})
         else:
             return not_found("Some fields are missing.")
 
@@ -332,7 +350,9 @@ class DetailUserView(Resource):
                 return jsonify(
                     {
                         "success": True,
-                        "attendance": user.pop("logs", [])
+                        "attendance": json.loads(
+                            json.dumps(user.pop("logs", []),
+                                       default=iso_convert))
                     })
             else:
                 return not_found("No Such User Exists")
@@ -487,7 +507,6 @@ def mapView():
         return render_template("mapbox.html")
     elif request.method == 'POST':
         coords = MapView(request.get_json().get("location")).location_coords()
-        print(coords)
         return jsonify(coords)
     else:
         geo_data = request.get_json().get("geoData")
@@ -505,6 +524,11 @@ def mapView():
             }, upsert=True)
         return jsonify(
             {"status": True, "message": "The location data is updated"})
+
+
+def iso_convert(date):
+    if isinstance(date, datetime.datetime):
+        return date.isoformat()
 
 
 @app.route("/uploads/<filename>")
@@ -587,4 +611,4 @@ restServer.add_resource(GeoView, "/admin/location")
 
 
 if __name__ == "__main__":
-    app.run(threaded=True, port=5000)
+    app.run(host="0.0.0.0", threaded=True, port=5000)
