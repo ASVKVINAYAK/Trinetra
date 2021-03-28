@@ -151,7 +151,13 @@ class UserView(Resource):
             user = users.find_one({'employee_id': employee_id})
             user.pop("password", None)
             user.pop("_id", None)
-            return jsonify({'success': True, **user})
+            user.update({"status": True})
+            return app.response_class(
+                response=json.dumps(user, default=iso_convert),
+                status=200,
+                mimetype='application/json'
+            )
+            # return jsonify({'success': True, **user})
         else:
             return not_found("Some fields are missing.")
 
