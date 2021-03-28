@@ -339,17 +339,11 @@ class _TableScreenState extends State<TableScreen> {
           _webviewController = webViewController;
         },
       );
-    var cardtextstyle=TextStyle(fontFamily: "Montserrat Regular",fontSize: 20,color: Color.fromRGBO(63, 60, 63,1));
+    var cardtextstyle=TextStyle(fontFamily: "Montserrat Regular",fontSize: 20,color: Colors.white);
       return BaseScreen(
         title: "Manage",
           body: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.bottomLeft,
-                    end:Alignment.topRight,
-                    stops: [0.3, 0.4, 0.8, 1],
-                    colors: [Colors.amberAccent, Colors.orangeAccent, Colors.pinkAccent, Colors.red])
-            ),
+            color: Colors.white,
             child:Expanded(
               child: GridView.count(
                 crossAxisSpacing: 50,
@@ -357,7 +351,7 @@ class _TableScreenState extends State<TableScreen> {
                 crossAxisCount: 3,
                 children: <Widget>[
                  Card(
-                   color: Colors.greenAccent,
+                   color: Colors.lightBlueAccent,
                    shape:RoundedRectangleBorder(
                      borderRadius: BorderRadius.circular(50),
                    ),
@@ -378,7 +372,7 @@ class _TableScreenState extends State<TableScreen> {
                  ),
 
                   Card(
-                    color: Colors.cyanAccent,
+                    color: Colors.lightBlueAccent,
                     shape:RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
@@ -399,7 +393,7 @@ class _TableScreenState extends State<TableScreen> {
                   ),
 
                   Card(
-                    color: Colors.lightGreenAccent,
+                    color: Colors.lightBlueAccent,
                     shape:RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
@@ -420,7 +414,7 @@ class _TableScreenState extends State<TableScreen> {
                   ),
 
                   Card(
-                    color: Colors.lightGreenAccent,
+                    color: Colors.lightBlueAccent,
                     shape:RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
@@ -444,7 +438,7 @@ class _TableScreenState extends State<TableScreen> {
 
 
                   Card(
-                    color: Colors.lightGreenAccent,
+                    color: Colors.lightBlueAccent,
                     shape:RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),

@@ -142,6 +142,7 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
             const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
             child: Container(
                  width: 10.0, height: 225.0,
+              padding: EdgeInsets.all(8),
               child: Card(
                 color: Colors.cyanAccent,
                 shape: RoundedRectangleBorder(
@@ -150,15 +151,19 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
                 child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    new Text(
-                      widget.title,
-                      style: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold),
+
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: new Text(
+                        widget.title,
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                     new Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
+                      padding: EdgeInsets.all(20),
                       child: new Text(
                         widget.content,
                         style: TextStyle(
