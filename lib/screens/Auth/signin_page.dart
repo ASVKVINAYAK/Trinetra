@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trinetra/constants.dart';
+import 'package:trinetra/helper/api_helper.dart';
 import 'package:trinetra/screens/Auth/verify_otp.dart';
 import 'package:trinetra/screens/HomePage.dart';
 
@@ -277,6 +278,10 @@ class _SigninPageState extends State<SigninPage> {
       // await pref.setBool('loggedIn', true);
       await pref.setString('phone', '+91' + phoneController.text);
       phone = '+91' + phoneController.text;
+      ApiHelper _apiHelper = new ApiHelper();
+      await _apiHelper.login(imei: '12345', phone: phoneController.text);
+      profile = await _apiHelper.getProfile();
+      log(profile.toJson());
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),

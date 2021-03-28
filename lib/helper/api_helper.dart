@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:http/http.dart' as http;
 import 'package:trinetra/constants.dart';
+import 'package:trinetra/helper/imei_helper.dart';
 import 'package:trinetra/models/day_attendance.dart';
 import 'package:trinetra/models/login_response.dart';
 import 'package:trinetra/models/profile_model.dart';
@@ -41,7 +43,8 @@ class ApiHelper {
   }
 
   /// Login API
-  Future<LoginResponse> login({int phone, String imei}) async {
+  Future<LoginResponse> login(
+      {@required String phone, @required String imei}) async {
     final String apiUrl = 'login';
     Map<String, String> data = {
       "phone": phone?.toString() ?? "9090999999",
@@ -54,6 +57,7 @@ class ApiHelper {
       if (response.statusCode != 200 || response.body == null) {
         return null;
       } else {
+        log(response.body);
         LoginResponse lr = LoginResponse.fromJson(response.body);
         token = lr.token;
         if (token != null)
@@ -62,7 +66,11 @@ class ApiHelper {
           log('Login Failure');
           return null;
         }
-
+        if (lr.firstRun) {
+          var hashIMEI = await IMEIHelper.getEncryptedIMEI();
+          log(hashIMEI.toString());
+          setIMEI(phone: phone.toString(), fcmToken: fcmToken, imei: hashIMEI);
+        }
         return lr;
       }
     } on Exception catch (e) {
@@ -91,7 +99,7 @@ class ApiHelper {
   }
 
   /// Get Attendance API
-  Future<DayAttendance> getAttendance(int phone) async {
+  Future<DayAttendance> getAttendance(String phone) async {
     final String apiUrl = 'user/$phone';
     try {
       http.Response response = await _getApiData(apiUrl);
@@ -109,17 +117,47 @@ class ApiHelper {
   }
 
   /// Set IMEI no.
-  Future setIMEI() async {
-    final String apiUrl = 'login';
+  Future<bool> setIMEI({String imei, String fcmToken, String phone}) async {
+    final String apiUrl = 'setIMEI';
+    Map<String, String> data = {"phone": phone, "imei": imei, "fcm": fcmToken};
+
+    try {
+      http.Response response = await _postApiData(apiUrl, data);
+      if (response.statusCode != 200 || response.body == null) {
+        return null;
+      } else {
+        if (response.body.contains('true'))
+          return true;
+        else
+          return false;
+      }
+    } on Exception catch (e) {
+      log(e.toString());
+      return false;
+    }
   }
 
   /// Save Location
-  Future saveLocation() async {
-    final String apiUrl = 'login';
-  }
-
-  /// Get Profile image
-  Future getProfileImage() async {
-    final String apiUrl = 'login';
+  Future saveLocation(Coordinates coordinates) async {
+    final String apiUrl = 'profile';
+    Map<String, double> data = {
+      "lat": coordinates.latitude,
+      "lon": coordinates.longitude,
+    };
+    try {
+      http.Response response = await _postApiData(apiUrl, data);
+      if (response.statusCode != 200 || response.body == null) {
+        return null;
+      } else {
+        var body = jsonDecode(response.body);
+        if (body['success'] == true)
+          return true;
+        else
+          return false;
+      }
+    } on Exception catch (e) {
+      log(e.toString());
+      return false;
+    }
   }
 }

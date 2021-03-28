@@ -5,6 +5,7 @@ import 'package:trinetra/models/profile_model.dart';
 Address geoAddress;
 String phone = '';
 String token = '';
+String fcmToken = '';
 ProfileModel profile;
 // ThemeData lightTheme = ThemeData(
 //     brightness: Brightness.light,

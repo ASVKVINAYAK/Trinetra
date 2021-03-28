@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:intl/intl.dart';
+import 'package:trinetra/constants.dart';
 import 'package:trinetra/helper/api_helper.dart';
 import 'package:trinetra/models/day_attendance.dart';
 import 'package:trinetra/widgets/GroupedList.dart';
@@ -27,7 +28,9 @@ class History extends StatelessWidget {
           ],
           backgroundColor: Theme.of(context).backgroundColor),
       body: FutureBuilder<DayAttendance>(
-          future: _apihelper.getAttendance(9090999999).then((value) => value),
+          future: _apihelper
+              .getAttendance(phone.replaceAll('+91', ''))
+              .then((value) => value),
           builder: (context, snapshot) {
             if (!snapshot.hasData)
               return Center(

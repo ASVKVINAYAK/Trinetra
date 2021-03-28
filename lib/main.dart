@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trinetra/constants.dart';
 import 'screens/splash_screen.dart';
-import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Trinetra',
       theme: darkTheme,
       home: MessageHandler(),
@@ -58,11 +58,13 @@ class _MessageHandlerState extends State<MessageHandler> {
   /// Get the token, save it to the database for current user
   _saveDeviceToken() async {
     // Get the token for this device
-    String fcmToken = await _fcm.getToken();
+    String fcm = await _fcm.getToken();
+    fcmToken = fcm;
     log(fcmToken);
   }
 
   initalizeFCM() async {
+    _saveDeviceToken();
     NotificationSettings settings;
     settings = await _fcm.getNotificationSettings();
 
@@ -87,8 +89,6 @@ class _MessageHandlerState extends State<MessageHandler> {
       print('User declined or has not accepted permission');
       return;
     }
-
-    _saveDeviceToken();
 
     // Get any messages which caused the application to open from
     // a terminated state.

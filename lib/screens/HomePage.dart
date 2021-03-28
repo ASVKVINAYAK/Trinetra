@@ -59,8 +59,10 @@ class _HomePageState extends State<HomePage> {
               floatingActionButton: FloatingActionButton(
                 onPressed: () async {
                   final isAuthenticated = await LocalAuthHelper.authenticate();
+                  final ApiHelper _apiHelper = new ApiHelper();
 
                   if (isAuthenticated) {
+                    await _apiHelper.saveLocation(geoAddress.coordinates);
                     Fluttertoast.showToast(
                         msg: 'Authentication Sucessful!',
                         backgroundColor: Colors.greenAccent);
