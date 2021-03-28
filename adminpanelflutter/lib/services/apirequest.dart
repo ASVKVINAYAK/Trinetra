@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'package:adminpanelflutter/services/Userdata.dart';
 import 'package:http/http.dart' as http;
 
-class userdetails{
-   String uid;
-  String ud;
-Future<List<UserElement>> getData() async {
+Future<List<UserElement>>  getData() async {
     print("xyz");
     Map body = {"username": "admin",
       "password": "admin123"};
@@ -28,9 +25,31 @@ Future<List<UserElement>> getData() async {
     var urluser = Uri.parse('https://techspace-trinetra.herokuapp.com/user');
     var resuser = await http.get(urluser, headers: headuser);
     print(resuser.body);
-    var ui = userFromJson(resuser.body);
-    List<UserElement> d = ui.users;
+    final u = userFromJson(resuser.body);
+    List d=u.users;
     return d;
   }
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

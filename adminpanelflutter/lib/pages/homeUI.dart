@@ -33,8 +33,8 @@ var img=[
 
 ];
 
-class _HomeUI extends State<HomeScreenUI> {
-
+class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin
+{
  @override
  void initState() {
    super.initState();
@@ -43,57 +43,73 @@ class _HomeUI extends State<HomeScreenUI> {
 
   @override
   Widget build(BuildContext context) {
-    userdetails u=new userdetails();
-    String x=u.ud;
-    String y=u.uid;
    return BaseScreen(
       title: "Dashboard",
       body: Container(
-        child: new Stack(
-          children: <Widget>[
-            new Transform.translate(
-              offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance.collection('users').snapshots(),
-                builder: (context, snapshot) {
-                  return new ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(0.0),
-                    scrollDirection: Axis.vertical,
-                    primary: true,
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: (context,index) {
-                      DocumentSnapshot fdata=snapshot.data.docs[index];
-                      String d="";
-                      d=" Name: "+fdata['name']+"\n Phone no: ${fdata['phone no']}"+"\n IMEI: "+fdata['IMEI']+"\n";
-                          return AwesomeListItem(
-                            title: fdata.id,
-                            content: d,
-                            color: COLORS[new Random().nextInt(5)],
-                            image: img[new Random().nextInt(4)],
-                          );
-                    },
-                  );
-                }
-              ),
-            ),
-
-            new Transform.translate(
-              offset: Offset(0.0, -56.0),
-              child: new Container(
-                child: new ClipPath(
-                  clipper: new MyClipper(),
-                    child: Image.network(
-                      "https://raw.githubusercontent.com/ASVKVINAYAK/HC-QS/main/WhatsApp%20Image%202021-03-21%20at%207.19.14%20PM.jpeg",
-                      fit: BoxFit.contain,
+          child: Stack(
+            children: [
+              new ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  Transform.translate(
+                    offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
+                    child: FutureBuilder <List<UserElement>>(
+                      future: getData(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<UserElement> data = snapshot.data;
+                          return
+                            ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: data.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  String d=" Name:${data[index].name} \n Phone no:${data[index].phone} \n Total Attendence ${data[index].overall.present} / ${data[index].overall.total}";
+                                  return AwesomeListItem(
+                                    title: data[index].employeeId,
+                                    content: d,
+                                    color: COLORS[new Random().nextInt(5)],
+                                    image: "https://techspace-trinetra.herokuapp.com/user${data[index].photo}",
+                                  );
+                                }
+                            );
+                        }
+                        // By default show a loading spinner.
+                        return  CircularProgressIndicator(
+                        );
+                      },
                     ),
-                ),
+                  ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                ],
               ),
-            )
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+
   }
 }
 
