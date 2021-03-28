@@ -1,3 +1,4 @@
+import 'package:adminpanelflutter/pages/homeUI.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:adminpanelflutter/common/base.dart';
@@ -439,6 +440,38 @@ class _TableScreenState extends State<TableScreen> {
                       ],
                     ),
                   ),
+
+
+
+                  Card(
+                    color: Colors.lightGreenAccent,
+                    shape:RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    elevation: 5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+
+                        IconButton(
+                          icon: new Icon(Icons.remove_red_eye),
+                          iconSize: 25,
+                          onPressed:()
+                          {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreenUI()));
+                          }
+                        ),
+                        Text('View Data',
+                          style: cardtextstyle,
+                        ),
+                      ],
+                    ),
+                  ),
+
+
+
+
+
                 ],
               ),
             ),

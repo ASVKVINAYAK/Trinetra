@@ -73,7 +73,7 @@ class _HomeUI extends State<HomeScreenUI> {
                             title: fdata.id,
                             content: d,
                             color: COLORS[new Random().nextInt(5)],
-                            image: img[new Random().nextInt(5)],
+                            image: img[new Random().nextInt(4)],
                           );
                     },
                   );
