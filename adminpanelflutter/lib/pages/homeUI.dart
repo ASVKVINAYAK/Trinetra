@@ -44,7 +44,6 @@ class _HomeUI extends State<HomeScreenUI> {
   @override
   Widget build(BuildContext context) {
     userdetails u=new userdetails();
-    u.getData();
     String x=u.ud;
     String y=u.uid;
    return BaseScreen(
@@ -55,7 +54,6 @@ class _HomeUI extends State<HomeScreenUI> {
             new Transform.translate(
               offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
               child: StreamBuilder(
-
                 stream: FirebaseFirestore.instance.collection('users').snapshots(),
                 builder: (context, snapshot) {
                   return new ListView.builder(
@@ -68,7 +66,6 @@ class _HomeUI extends State<HomeScreenUI> {
                       DocumentSnapshot fdata=snapshot.data.docs[index];
                       String d="";
                       d=" Name: "+fdata['name']+"\n Phone no: ${fdata['phone no']}"+"\n IMEI: "+fdata['IMEI']+"\n";
-
                           return AwesomeListItem(
                             title: fdata.id,
                             content: d,

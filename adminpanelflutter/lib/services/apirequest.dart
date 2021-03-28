@@ -5,8 +5,7 @@ import 'package:http/http.dart' as http;
 class userdetails{
    String uid;
   String ud;
-
-getData() async {
+Future<List<UserElement>> getData() async {
     print("xyz");
     Map body = {"username": "admin",
       "password": "admin123"};
@@ -31,11 +30,7 @@ getData() async {
     print(resuser.body);
     var ui = userFromJson(resuser.body);
     List<UserElement> d = ui.users;
-
-    String x="${d[0].employeeId}";
-    String y="Name: ${d[0].name} \n ";
-    this.uid=x;
-    this.ud=y;
+    return d;
   }
 
 }
