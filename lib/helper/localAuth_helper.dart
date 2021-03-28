@@ -22,7 +22,7 @@ class LocalAuthHelper {
 
     try {
       return await _auth.authenticate(
-        localizedReason: 'Authenticate to Give your Attendence',
+        localizedReason: 'Authenticate to Give your Attendance',
         androidAuthStrings: AndroidAuthMessages(
           signInTitle: 'Face ID Required',
         ),

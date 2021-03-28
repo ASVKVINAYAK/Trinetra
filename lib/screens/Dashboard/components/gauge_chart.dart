@@ -59,7 +59,7 @@ class GaugeChart extends StatelessWidget {
           labelAccessorFn: (GaugeSegment segment, _) => segment.segment,
           // segment.segment == 'Absent' ? '${segment.value}' : null,
           data: data,
-          displayName: 'Attendence')
+          displayName: 'Attendance')
     ];
   }
 
@@ -81,7 +81,7 @@ class GaugeChart extends StatelessWidget {
           labelAccessorFn: (GaugeSegment segment, _) => segment.segment,
           // segment.segment == 'Absent' ? '${segment.value}' : null,
           data: data,
-          displayName: 'Attendence')
+          displayName: 'Attendance')
     ];
   }
 }

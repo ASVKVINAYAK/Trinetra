@@ -25,12 +25,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     Future.microtask(() async {
       await _determinePosition();
-      await _apiHelper.login();
       SharedPreferences pref = await SharedPreferences.getInstance();
       phone = pref.getString('phone') ?? null;
       isUserLoggedIn = (phone != null);
       var hashIMEI = await IMEIHelper.getEncryptedIMEI();
       log(hashIMEI.toString());
+      await _apiHelper.login(imei: '12345', phone: 9090999999);
+      profile = await _apiHelper.getProfile();
+      log(profile.toJson());
     }).whenComplete(() {
       if (isUserLoggedIn)
         Navigator.pushAndRemoveUntil(

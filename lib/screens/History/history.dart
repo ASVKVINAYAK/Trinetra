@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:intl/intl.dart';
+import 'package:trinetra/helper/api_helper.dart';
 import 'package:trinetra/models/day_attendance.dart';
 import 'package:trinetra/widgets/GroupedList.dart';
 
@@ -10,6 +11,7 @@ class History extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ApiHelper _apihelper = new ApiHelper();
     var listviewController = new ScrollController();
     return Scaffold(
       appBar: AppBar(
@@ -24,17 +26,21 @@ class History extends StatelessWidget {
             //     ))
           ],
           backgroundColor: Theme.of(context).backgroundColor),
-      body: FutureBuilder<DayAttendence>(
-          future: Future.value(DayAttendence.fromMap(data)),
+      body: FutureBuilder<DayAttendance>(
+          future: _apihelper.getAttendance(9090999999).then((value) => value),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return CircularProgressIndicator();
+            if (!snapshot.hasData)
+              return Center(
+                  child: CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+              ));
             return Scrollbar(
               controller: listviewController,
               interactive: true,
               thickness: 5,
-              child: GroupedListView<Attendence, DateTime>(
+              child: GroupedListView<Attendance, DateTime>(
                 controller: listviewController,
-                elements: snapshot.data.attendence,
+                elements: snapshot.data.attendance,
                 itemBuilder: (context, element) {
                   return Container(
                     width: MediaQuery.of(context).size.width * 0.9,
@@ -70,14 +76,14 @@ class History extends StatelessWidget {
                   );
                 },
                 order: GroupedListOrder.DESC,
-                reverse: true,
+                // reverse: true,
                 floatingHeader: true,
                 useStickyGroupSeparators: true,
-                groupBy: (Attendence element) => DateTime(
+                groupBy: (Attendance element) => DateTime(
                     element.timestamp.year,
                     element.timestamp.month,
                     element.timestamp.day),
-                groupHeaderBuilder: (Attendence element) => Container(
+                groupHeaderBuilder: (Attendance element) => Container(
                   height: 40,
                   width: 120,
                   alignment: Alignment.center,
@@ -101,7 +107,7 @@ class History extends StatelessWidget {
 }
 
 var data = {
-  "attendence": [
+  "attendance": [
     {
       "lat": "72.8241",
       "lon": "-23.0402",

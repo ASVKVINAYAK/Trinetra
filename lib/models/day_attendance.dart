@@ -1,38 +1,38 @@
 // To parse this JSON data, do
 //
-//     final dayAttendence = dayAttendenceFromMap(jsonString);
+//     final dayAttendance = dayAttendanceFromMap(jsonString);
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-class DayAttendence {
-  DayAttendence({
-    @required this.attendence,
+class DayAttendance {
+  DayAttendance({
+    @required this.attendance,
     @required this.status,
   });
 
-  final List<Attendence> attendence;
+  final List<Attendance> attendance;
   final bool status;
 
-  factory DayAttendence.fromJson(String str) =>
-      DayAttendence.fromMap(json.decode(str));
+  factory DayAttendance.fromJson(String str) =>
+      DayAttendance.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory DayAttendence.fromMap(Map<String, dynamic> json) => DayAttendence(
-        attendence: List<Attendence>.from(
-            json["attendence"].map((x) => Attendence.fromMap(x))),
+  factory DayAttendance.fromMap(Map<String, dynamic> json) => DayAttendance(
+        attendance: List<Attendance>.from(
+            json["attendance"].map((x) => Attendance.fromMap(x))),
         status: json["status"],
       );
 
   Map<String, dynamic> toMap() => {
-        "attendence": List<dynamic>.from(attendence.map((x) => x.toMap())),
+        "attendance": List<dynamic>.from(attendance.map((x) => x.toMap())),
         "status": status,
       };
 }
 
-class Attendence {
-  Attendence({
+class Attendance {
+  Attendance({
     @required this.lat,
     @required this.lon,
     @required this.timestamp,
@@ -44,12 +44,12 @@ class Attendence {
   final DateTime timestamp;
   final bool available;
 
-  factory Attendence.fromJson(String str) =>
-      Attendence.fromMap(json.decode(str));
+  factory Attendance.fromJson(String str) =>
+      Attendance.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Attendence.fromMap(Map<String, dynamic> json) => Attendence(
+  factory Attendance.fromMap(Map<String, dynamic> json) => Attendance(
         lat: double.parse(json["lat"].toString()),
         lon: double.parse(json["lon"].toString()),
         timestamp: DateTime.parse(json["timestamp"]),

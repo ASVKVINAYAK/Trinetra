@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:trinetra/models/profile_model.dart';
 
 Address geoAddress;
 String phone = '';
+String token = '';
+ProfileModel profile;
 // ThemeData lightTheme = ThemeData(
 //     brightness: Brightness.light,
 //     visualDensity: VisualDensity(vertical: 0.5, horizontal: 0.5),

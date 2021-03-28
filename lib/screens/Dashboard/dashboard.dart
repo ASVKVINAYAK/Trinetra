@@ -1,12 +1,15 @@
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:trinetra/constants.dart';
+import 'package:trinetra/models/profile_model.dart';
 
-import 'components/AttendenceCard.dart';
+import 'components/AttendanceCard.dart';
 
 class Dashboard extends StatelessWidget {
-  const Dashboard({Key key}) : super(key: key);
+  const Dashboard({Key key, this.userProfile}) : super(key: key);
+  final ProfileModel userProfile;
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +46,13 @@ class Dashboard extends StatelessWidget {
                                   color: Colors.white.withOpacity(0.9)),
                               children: [
                                 TextSpan(
-                                  text: '${'Ayush Kejariwal'}\n',
+                                  text: '${userProfile.name}\n',
                                   style: TextStyle(
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
-                                  text: 'Id: ${'1234567890'}',
+                                  text: 'Id: ${userProfile.employeeId}',
                                   style: TextStyle(
                                       fontSize: 15, color: Colors.white60),
                                 ),
@@ -67,8 +70,7 @@ class Dashboard extends StatelessWidget {
                     backgroundColor: Colors.indigo[200],
                     radius: 50,
                     backgroundImage: NetworkImage(
-                      // 'http://213.188.253.139:5001/upload/4cd5530f-6eb1-4904-8c24-21056486d524.jpg'
-                      'https://media.gettyimages.com/photos/portrait-of-smiling-mid-adult-man-wearing-tshirt-picture-id985138674?k=6&m=985138674&s=612x612&w=0&h=1arYWaa0TsYnwz2LyvLV5qPKCiyUufFljDjjTdI5mkQ=',
+                      'https://techspace-trinetra.herokuapp.com/${userProfile.photo}',
                     ),
                   ),
                 ],
@@ -94,8 +96,8 @@ class Dashboard extends StatelessWidget {
               ),
             ),
 
-            /// Attendence card
-            AttendenceCard(size: size),
+            /// Attendance card
+            AttendanceCard(size: size, userProfile: userProfile),
 
             /// Current Attendance
             Container(
@@ -111,7 +113,7 @@ class Dashboard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Today\'s Attendence',
+                      'Today\'s Attendance',
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
@@ -126,26 +128,36 @@ class Dashboard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Icon(
-                          Icons.beenhere_rounded,
-                          color: Colors.green[900],
-                        ),
-                        Icon(
-                          Icons.beenhere_rounded,
-                          color: Colors.green[900],
-                        ),
-                        Icon(
-                          Icons.beenhere_rounded,
-                          color: Colors.green[900],
-                        ),
-                        Icon(
-                          Icons.beenhere_outlined,
-                          color: Colors.blueGrey,
-                        ),
-                        Icon(
-                          Icons.beenhere_outlined,
-                          color: Colors.blueGrey,
-                        ),
+                        for (var att in userProfile.current.logs)
+                          Column(
+                            children: [
+                              (att.available)
+                                  ? Icon(
+                                      Icons.beenhere_rounded,
+                                      color: Colors.green[900],
+                                    )
+                                  : Icon(
+                                      Icons.unpublished_outlined,
+                                      color: Colors.red[900],
+                                    ),
+                              AutoSizeText(
+                                DateFormat.jm().format(att.timestamp),
+                                style: TextStyle(color: Colors.blueGrey[800]),
+                              ),
+                            ],
+                          ),
+                        // Icon(
+                        //   Icons.beenhere_rounded,
+                        //   color: Colors.green[900],
+                        // ),
+                        // Icon(
+                        //   Icons.beenhere_outlined,
+                        //   color: Colors.blueGrey,
+                        // ),
+                        // Icon(
+                        //   Icons.beenhere_outlined,
+                        //   color: Colors.blueGrey,
+                        // ),
                       ],
                     ),
                   ),

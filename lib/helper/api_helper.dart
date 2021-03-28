@@ -3,13 +3,13 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:trinetra/constants.dart';
 import 'package:trinetra/models/day_attendance.dart';
 import 'package:trinetra/models/login_response.dart';
 import 'package:trinetra/models/profile_model.dart';
 
 class ApiHelper {
   final String baseUrl = 'https://techspace-trinetra.herokuapp.com/';
-  String token = '';
 
   /// Get Request using authorization token
   Future<http.Response> _getApiData(
@@ -18,9 +18,9 @@ class ApiHelper {
     Map<String, String> _headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer ${this.token}'
+      'Authorization': 'Bearer $token'
     };
-    log(Uri.parse(baseUrl + apiUrl).toString());
+    // log(Uri.parse(baseUrl + apiUrl).toString());
     Uri _url = Uri.parse(baseUrl + apiUrl);
     return await http.get(_url, headers: _headers);
   }
@@ -31,10 +31,10 @@ class ApiHelper {
     Map<String, String> _headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer ${this.token}'
+      'Authorization': 'Bearer $token'
     };
-    log(Uri.parse(baseUrl + apiUrl).toString());
-    log(parameters.toString());
+    // log(Uri.parse(baseUrl + apiUrl).toString());
+    // log(parameters.toString());
     Uri _url = Uri.parse(baseUrl + apiUrl);
     return await http.post(_url,
         body: jsonEncode(parameters), headers: _headers);
@@ -54,9 +54,15 @@ class ApiHelper {
       if (response.statusCode != 200 || response.body == null) {
         return null;
       } else {
-        log(response.body);
         LoginResponse lr = LoginResponse.fromJson(response.body);
-        this.token = lr.token;
+        token = lr.token;
+        if (token != null)
+          log('Login Success');
+        else {
+          log('Login Failure');
+          return null;
+        }
+
         return lr;
       }
     } on Exception catch (e) {
@@ -70,11 +76,11 @@ class ApiHelper {
     final String apiUrl = 'profile';
     try {
       http.Response response = await _getApiData(apiUrl);
-      log(response.statusCode.toString());
+      // log(response.statusCode.toString());
       if (response.statusCode != 200 || response.body == null) {
         return null;
       } else {
-        log(response.body);
+        // log(response.body);
         ProfileModel pm = ProfileModel.fromJson(response.body);
         return pm;
       }
@@ -84,17 +90,17 @@ class ApiHelper {
     }
   }
 
-  /// Get Attendence API
-  Future getAttendence(int phone) async {
+  /// Get Attendance API
+  Future<DayAttendance> getAttendance(int phone) async {
     final String apiUrl = 'user/$phone';
     try {
       http.Response response = await _getApiData(apiUrl);
-      if (response.statusCode == 200 || response.body != null) {
+      if (response.statusCode != 200 || response.body == null) {
         return null;
       } else {
-        log(response.body);
-        DayAttendence attendence = DayAttendence.fromJson(response.body);
-        return attendence;
+        // log(response.body);
+        DayAttendance attendance = DayAttendance.fromJson(response.body);
+        return attendance;
       }
     } on Exception catch (e) {
       log(e.toString());

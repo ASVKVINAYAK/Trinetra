@@ -67,7 +67,7 @@ class Current {
     this.timestamp,
   });
 
-  final List<Attendence> logs;
+  final List<Attendance> logs;
   final DateTime timestamp;
 
   factory Current.fromJson(String str) => Current.fromMap(json.decode(str));
@@ -77,8 +77,8 @@ class Current {
   factory Current.fromMap(Map<String, dynamic> json) => Current(
         logs: json["logs"] == null
             ? null
-            : List<Attendence>.from(
-                json["logs"].map((x) => Attendence.fromMap(x))),
+            : List<Attendance>.from(
+                json["logs"].map((x) => Attendance.fromMap(x))),
         timestamp: json["timestamp"] == null
             ? null
             : DateTime.parse(json["timestamp"]),

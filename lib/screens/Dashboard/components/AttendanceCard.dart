@@ -1,15 +1,18 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:trinetra/models/profile_model.dart';
 
 import 'gauge_chart.dart';
 
-class AttendenceCard extends StatelessWidget {
-  const AttendenceCard({
+class AttendanceCard extends StatelessWidget {
+  const AttendanceCard({
     Key key,
     @required this.size,
+    this.userProfile,
   }) : super(key: key);
 
+  final ProfileModel userProfile;
   final Size size;
 
   @override
@@ -33,7 +36,7 @@ class AttendenceCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Attendence',
+              'Attendance',
               style: TextStyle(
                   color: Theme.of(context).backgroundColor, fontSize: 20),
             ),
@@ -48,26 +51,46 @@ class AttendenceCard extends StatelessWidget {
                   presentAbsentCard(
                       name: 'Present',
                       valueColor: Colors.green,
-                      value: 118,
-                      total: 150,
+                      value: userProfile.overall.present,
+                      total: userProfile.overall.total,
                       size: size,
                       context: context),
                   presentAbsentCard(
                       name: 'Absent',
                       valueColor: Colors.red,
-                      value: 32,
-                      total: 150,
+                      value: userProfile.overall.total -
+                          userProfile.overall.present,
+                      total: userProfile.overall.total,
                       size: size,
                       context: context),
                 ],
               ),
-              Container(
-                  width: size.width * 0.4,
-                  height: 200,
-                  child: GaugeChart.withData(
-                    absent: 32,
-                    present: 118,
-                  )),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: size.width * 0.4,
+                      height: 200,
+                      child: GaugeChart.withData(
+                        absent: userProfile.overall.total -
+                            userProfile.overall.present,
+                        present: userProfile.overall.present,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Total Classes: ${userProfile.overall.total}',
+                        style: TextStyle(
+                            color: Theme.of(context).backgroundColor,
+                            fontSize: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ],
