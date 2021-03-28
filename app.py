@@ -16,9 +16,9 @@ import json
 
 
 app = Flask(__name__)
-# timezone = datetime.timezone(datetime.timedelta(
-#     seconds=19800), 'India Standard Time')
-timezone = datetime.timezone.utc
+timezone = datetime.timezone(datetime.timedelta(
+    seconds=19800), 'India Standard Time')
+# timezone = datetime.timezone.utc
 
 
 class LoginView(Resource):
@@ -376,22 +376,22 @@ class DetailUserView(Resource):
 class GeoView(Resource):
 
     def get(self):
-        auth_header = request.headers.get('Authorization')
-        if auth_header:
-            auth_token = auth_header.split(" ")[1]
-        else:
-            return not_found("Missing Authorization Token")
-        resp = decode_auth_token(auth_token)
-        if isinstance(resp, str):
-            return not_found(resp)
-        if resp["admin"]:
-            location = coords_collection.find_one({"id": "test"})
-            if location:
-                location.pop("_id")
-                return jsonify({"success": True, **location})
-            return not_found("Location has not been set")
-        else:
-            return not_found("Unauthorized User")
+        # auth_header = request.headers.get('Authorization')
+        # if auth_header:
+        #     auth_token = auth_header.split(" ")[1]
+        # else:
+        #     return not_found("Missing Authorization Token")
+        # resp = decode_auth_token(auth_token)
+        # if isinstance(resp, str):
+        #     return not_found(resp)
+        # if resp["admin"]:
+        location = coords_collection.find_one({"id": "test"})
+        if location:
+            location.pop("_id")
+            return jsonify({"success": True, **location})
+        return not_found("Location has not been set")
+        # else:
+        #     return not_found("Unauthorized User")
 
     def post(self):
         auth_header = request.headers.get('Authorization')
@@ -534,7 +534,7 @@ def mapView():
 
 def iso_convert(date):
     if isinstance(date, datetime.datetime):
-        return date.isoformat()
+        return date.replace(tzinfo=timezone).isoformat()
 
 
 @app.route("/uploads/<filename>")
