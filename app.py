@@ -17,7 +17,7 @@ import json
 
 app = Flask(__name__)
 timezone = datetime.timezone(datetime.timedelta(
-    seconds=19800), 'India Standard Time')
+    seconds=-27000), 'India Standard Time')
 # timezone = datetime.timezone.utc
 
 
