@@ -39,7 +39,7 @@ def send_notification(user_token):
     return resp.status_code
 
 
-send_notification("f9Uh1-ZNSjK2CPBJaMSnvz:APA91bG7Ts19ktN054UAH_ctNTcPKCnJei1c-hKjjkK1m69Z7hdDAM0oZ-0wXuGBPHQUvefQFuGxgddCUYL9kkKj7bgeXJUlR-1FIcbT-Jbsa80m8jl32Ox3AhQrvIrh9MyMqPMOsBRS")
+# send_notification("f9Uh1-ZNSjK2CPBJaMSnvz:APA91bG7Ts19ktN054UAH_ctNTcPKCnJei1c-hKjjkK1m69Z7hdDAM0oZ-0wXuGBPHQUvefQFuGxgddCUYL9kkKj7bgeXJUlR-1FIcbT-Jbsa80m8jl32Ox3AhQrvIrh9MyMqPMOsBRS")
 
 
 def ask_attendance():
@@ -73,15 +73,18 @@ if __name__ == '__main__':
     while True:
         h, m = map(int, time.strftime("%H %M").split())
         if len(logs) < 5:
-            if 9 < h < 17:
+            if 8 < h < 17:
                 if h in logs:
                     time.sleep(10*60)
                     continue
                 else:
+                    print("Fetching Attendance at {}:{}".format(h,m))
                     ask_attendance()
                     time.sleep(10*60)
                     revoke_attendance()
+                    logs.append(h)
                 time.sleep(((18-h)/(5-len(logs)))*60*60)
-            time.sleep(10*60)
+            else:
+                time.sleep(10*60)
         else:
             logs = []
