@@ -1,4 +1,7 @@
+import 'package:adminpanelflutter/API_Models/user_attendence_data.dart';
+import 'package:adminpanelflutter/Screens/view_user_attendence.dart';
 import 'package:adminpanelflutter/pages/homeUI.dart';
+import 'package:adminpanelflutter/services/apirequest.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:adminpanelflutter/common/base.dart';
@@ -22,6 +25,8 @@ class _TableScreenState extends State<TableScreen> {
   final _formKey = GlobalKey<FormState>();
   Userdetails userdetails = new Userdetails();
   var _url = 'https://techspace-trinetra.herokuapp.com/admin/map';
+
+  get olc => null;
   void _launchURL() async => await launch(_url);
 
 
@@ -332,13 +337,6 @@ class _TableScreenState extends State<TableScreen> {
     @override
     Widget build(BuildContext context) {
 
-      WebViewController _webviewController;
-      WebView(
-        initialUrl: '',
-        onWebViewCreated: (WebViewController webViewController) {
-          _webviewController = webViewController;
-        },
-      );
     var cardtextstyle=TextStyle(fontFamily: "Montserrat Regular",fontSize: 20,color: Colors.white);
       return BaseScreen(
         title: "Manage",
@@ -456,6 +454,36 @@ class _TableScreenState extends State<TableScreen> {
                           }
                         ),
                         Text('View Data',
+                          style: cardtextstyle,
+                        ),
+                      ],
+                    ),
+                  ),
+
+
+
+
+
+
+                  Card(
+                    color: Colors.lightBlueAccent,
+                    shape:RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    elevation: 5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+
+                        IconButton(
+                            icon: new Icon(Icons.check),
+                            iconSize: 25,
+                            onPressed:()
+                            {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => AttendenceUI()));
+                            }
+                        ),
+                        Text('View Attendece',
                           style: cardtextstyle,
                         ),
                       ],

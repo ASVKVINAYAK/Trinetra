@@ -170,6 +170,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+  open_location_code:
+    dependency: "direct main"
+    description:
+      path: dart
+      ref: HEAD
+      resolved-ref: d47d9f9b95e9f306628396e1b30aaf275f83a5d4
+      url: "git://github.com/google/open-location-code.git"
+    source: git
+    version: "0.0.1"
   path:
     dependency: transitive
     description:

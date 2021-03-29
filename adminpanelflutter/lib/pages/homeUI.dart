@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:adminpanelflutter/API_Models/user_attendence_data.dart';
 import 'package:adminpanelflutter/services/Userdata.dart';
 import 'package:adminpanelflutter/services/apirequest.dart';
 import 'package:http/http.dart' as http;
+import 'package:open_location_code/open_location_code.dart' as olc;
 import 'package:adminpanelflutter/common/base.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -46,67 +48,46 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin
    return BaseScreen(
       title: "Dashboard",
       body: Container(
-          child: Stack(
-            children: [
-              new ListView(
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  Transform.translate(
-                    offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
-                    child: FutureBuilder <List<UserElement>>(
-                      future: getData(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          List<UserElement> data = snapshot.data;
-                          return
-                            ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: data.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  String d=" Name:${data[index].name} \n Phone no:${data[index].phone} \n Total Attendence ${data[index].overall.present} / ${data[index].overall.total}";
-                                  return AwesomeListItem(
-                                    title: data[index].employeeId,
-                                    content: d,
-                                    color: COLORS[new Random().nextInt(5)],
-                                    image: "https://techspace-trinetra.herokuapp.com/user${data[index].photo}",
-                                  );
-                                }
-                            );
-                        }
-                        // By default show a loading spinner.
-                        return  CircularProgressIndicator(
-                        );
-                      },
+            child: Stack(
+              children: [
+                new ListView(
+                  scrollDirection: Axis.vertical,
+                  children: <Widget>[
+                    Transform.translate(
+                      offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
+                      child: FutureBuilder <List<UserElement>>(
+                        future: getData(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<UserElement> data = snapshot.data;
+                            return
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: data.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    String d=" Name:${data[index].name} \n Phone no:${data[index].phone} \n Total Attendence ${data[index].overall.present} / ${data[index].overall.total}";
+                                    return AwesomeListItem(
+                                      title: data[index].employeeId,
+                                      content: d,
+                                      color: COLORS[new Random().nextInt(5)],
+                                      image: img[new Random().nextInt(5)],
+                                    );
+                                  }
+                              );
+                          }
+                          // By default show a loading spinner.
+                          return  CircularProgressIndicator(
+                          );
+                        },
+                      ),
                     ),
-                  ),
 
 
+                  ],
+                ),
+              ],
+            ),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                ],
-              ),
-            ],
-          ),
         ),
       );
 
@@ -166,7 +147,7 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
                   children: <Widget>[
 
                     Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(0.5),
                       child: new Text(
                         widget.title,
                         style: TextStyle(
@@ -176,7 +157,7 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
                       ),
                     ),
                     new Padding(
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.all(10),
                       child: new Text(
                         widget.content,
                         style: TextStyle(
@@ -185,6 +166,7 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
+
                   ],
                 ),
               ),
