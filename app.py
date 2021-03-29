@@ -254,25 +254,30 @@ class ProfileView(Resource):
         lon = data.get("lon")
         if lat and lon:
             now = datetime.datetime.now(timezone)
-            datef = '%Y-%m-%d %H:%M:%S'
-            now_str = now.strftime(datef)
+            # datef = '%Y-%m-%d %H:%M:%S'
+            # now_str = now.strftime(datef)
             location = coords_collection.find_one({"id": "test"})
             if not location:
                 return not_found("Location has not been set")
+            if user.get("active", 1):
+                return not_found("Attendance has not been requested yet")
             poly_map = MapPolygon(location.pop("location"))
             available = poly_map.validate_point(Point(lon, lat))
             log = {"timestamp": now, "lat": lat,
                    "lon": lon, "available": available}
-            timediff = datetime.datetime.strptime(
-                now_str, datef)-user["current"].get("timestamp")
-            if (timediff < datetime.timedelta(hours=21)):
+            # timediff = datetime.datetime.strptime(
+            #     now_str, datef)-user["current"].get("timestamp")
+            # if (timediff < datetime.timedelta(hours=21)):
+
+            prev_logs = user["current"].get("logs", [])
+            if len(prev_logs) <= 5:
                 users.update_one(
                     {'phone': resp['id']},
                     {
-                        '$push': {"current.logs": log}
+                        '$push': {"current.logs": log},
+                        '$set': {"active": 1}
                     })
             else:
-                prev_logs = user["current"].get("logs", [])
                 p_count = int(all([prev_log["available"]
                                    for prev_log in prev_logs]))
                 overall = user["overall"]
@@ -290,7 +295,8 @@ class ProfileView(Resource):
                             "overall.total": overall.get("total", 0)+1,
                             "overall.present": overall.get("present")+p_count,
                             "current.logs": [log],
-                            "current.timestamp": now
+                            "current.timestamp": now,
+                            "active": 1
                         }
                     })
 
