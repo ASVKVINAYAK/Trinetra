@@ -27,24 +27,28 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<ProfileModel> _refreshProfile(BuildContext context) async {
-    return _apiHelper.getProfile();
+    Future<ProfileModel> _profile = _apiHelper.getProfile();
+    setState(() {
+      profile = _profile;
+    });
+    return _profile;
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return RefreshIndicator(
-      onRefresh: () => _refreshProfile(context),
-      color: Colors.blue,
-      child: FutureBuilder<ProfileModel>(
-          future: _apiHelper.getProfile(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData)
-              return Center(
-                  child: CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
-              ));
-            return Container(
+    return FutureBuilder<ProfileModel>(
+        future: profile,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData)
+            return Center(
+                child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+            ));
+          return RefreshIndicator(
+            onRefresh: () => _refreshProfile(context),
+            color: Colors.blue,
+            child: Container(
               height: size.height,
               width: size.width,
               child: SingleChildScrollView(
@@ -103,7 +107,7 @@ class _DashboardState extends State<Dashboard> {
                             backgroundColor: Colors.indigo[200],
                             radius: 50,
                             backgroundImage: NetworkImage(
-                              'https://techspace-trinetra.herokuapp.com/${widget.userProfile.photo}',
+                              'https://techspace-trinetra.herokuapp.com${widget.userProfile.photo}',
                             ),
                           ),
                         ],
@@ -205,8 +209,8 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
               ),
-            );
-          }),
-    );
+            ),
+          );
+        });
   }
 }

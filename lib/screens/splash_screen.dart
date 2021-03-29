@@ -93,8 +93,8 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Color(0xff181926),
       body: Center(
-        child: Image.network(
-          'https://lh3.googleusercontent.com/tG38RRq2kEtzMsaAbzduW9kMbnpXjHuR0226snKQuDaAJd8IcCJUrEod5-hjUbGC6w=w300',
+        child: Image.asset(
+          'assets/logo.png',
           width: MediaQuery.of(context).size.width * 0.7,
         ),
       ),
