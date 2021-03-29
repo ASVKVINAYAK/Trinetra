@@ -39,7 +39,7 @@ def send_notification(user_token):
     return resp.status_code
 
 
-# send_notification("dq_t0IbxTpODcnZ8c6GTrT:APA91bHUJZNeiSuXYZP-vgeeGtSrIrXgZ1G43xEpjA6Yv6myyfZpBsLe91l-_iZAa6xnSI7Vv11249P44gJd4kViI_-HS-mKP0_2PQSfKxzx-KeMRa26TPb-igou-2sErOib4jXXLhaQ")
+send_notification("f9Uh1-ZNSjK2CPBJaMSnvz:APA91bG7Ts19ktN054UAH_ctNTcPKCnJei1c-hKjjkK1m69Z7hdDAM0oZ-0wXuGBPHQUvefQFuGxgddCUYL9kkKj7bgeXJUlR-1FIcbT-Jbsa80m8jl32Ox3AhQrvIrh9MyMqPMOsBRS")
 
 
 def ask_attendance():
@@ -60,27 +60,28 @@ def revoke_attendance():
         "timestamp": datetime.datetime.now(timezone),
         "lat": 0, "lon": 0,
         "available": False
-        }
-    users.update_many{
+    }
+    users.update_many(
         {"active": 0},
         {
             '$push': {"current.logs": log}
         })
-    }
 
-logs = []
-while True:
-    h, m = map(int, time.strftime("%H %M").split())
-    if len(logs)<5:
-        if 9<h<17:
-            if h in logs:
-                time.sleep(10*60)
-                continue
-            else:
-                ask_attendance()
-                time.sleep(10*60)
-                revoke_attendance()
-            time.sleep(((18-h)/(5-len(logs)))*60*60)
-        time.sleep(10*60)
-    else:
-        logs=[]
+
+if __name__ == '__main__':
+    logs = []
+    while True:
+        h, m = map(int, time.strftime("%H %M").split())
+        if len(logs) < 5:
+            if 9 < h < 17:
+                if h in logs:
+                    time.sleep(10*60)
+                    continue
+                else:
+                    ask_attendance()
+                    time.sleep(10*60)
+                    revoke_attendance()
+                time.sleep(((18-h)/(5-len(logs)))*60*60)
+            time.sleep(10*60)
+        else:
+            logs = []
