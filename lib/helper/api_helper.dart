@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:http/http.dart' as http;
 import 'package:trinetra/constants.dart';
@@ -64,6 +66,11 @@ class ApiHelper {
           log('Login Success');
         else {
           log('Login Failure');
+          var body = jsonDecode(response.body);
+          Fluttertoast.showToast(
+            msg: body['message'] ?? 'Login Failure',
+            backgroundColor: Colors.red,
+          );
           return null;
         }
         if (lr.firstRun) {
@@ -107,8 +114,18 @@ class ApiHelper {
         return null;
       } else {
         // log(response.body);
-        DayAttendance attendance = DayAttendance.fromJson(response.body);
-        return attendance;
+        var body = jsonDecode(response.body);
+        if (body['success'] == true) {
+          DayAttendance attendance = DayAttendance.fromJson(response.body);
+          return attendance;
+        } else {
+          if (body['message'] != null)
+            Fluttertoast.showToast(
+              msg: body['message'],
+              backgroundColor: Colors.red,
+            );
+          return null;
+        }
       }
     } on Exception catch (e) {
       log(e.toString());
@@ -126,10 +143,17 @@ class ApiHelper {
       if (response.statusCode != 200 || response.body == null) {
         return null;
       } else {
-        if (response.body.contains('true'))
+        var body = jsonDecode(response.body);
+        if (body['success'] == true)
           return true;
-        else
+        else {
+          if (body['message'] != null)
+            Fluttertoast.showToast(
+              msg: body['message'],
+              backgroundColor: Colors.red,
+            );
           return false;
+        }
       }
     } on Exception catch (e) {
       log(e.toString());
@@ -150,10 +174,16 @@ class ApiHelper {
         return null;
       } else {
         var body = jsonDecode(response.body);
-        if (body['success'] == true)
+        if (body['success'] == true) {
           return true;
-        else
+        } else {
+          if (body['message'] != null)
+            Fluttertoast.showToast(
+              msg: body['message'],
+              backgroundColor: Colors.red,
+            );
           return false;
+        }
       }
     } on Exception catch (e) {
       log(e.toString());

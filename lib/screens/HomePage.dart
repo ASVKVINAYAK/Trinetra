@@ -62,10 +62,12 @@ class _HomePageState extends State<HomePage> {
                   final ApiHelper _apiHelper = new ApiHelper();
 
                   if (isAuthenticated) {
-                    await _apiHelper.saveLocation(geoAddress.coordinates);
-                    Fluttertoast.showToast(
-                        msg: 'Authentication Sucessful!',
-                        backgroundColor: Colors.greenAccent);
+                    await _apiHelper.saveLocation(geoAddress.coordinates).then(
+                        (value) => value
+                            ? Fluttertoast.showToast(
+                                msg: 'Authentication Sucessful!',
+                                backgroundColor: Colors.greenAccent)
+                            : null);
                     // Navigator.of(context).pushReplacement(
                     //   MaterialPageRoute(builder: (context) => HomePage()),
                     // );
