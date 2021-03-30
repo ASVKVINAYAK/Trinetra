@@ -270,6 +270,8 @@ class ProfileView(Resource):
             # if (timediff < datetime.timedelta(hours=21)):
 
             prev_logs = user["current"].get("logs", [])
+            print("PREV: ", prev_logs)
+            print("LOGS: ", len(prev_logs))
             if len(prev_logs) <= 5:
                 users.update_one(
                     {'phone': resp['id']},
