@@ -37,6 +37,14 @@ class History extends StatelessWidget {
                   child: CircularProgressIndicator(
                 valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
               ));
+            if (snapshot.data.attendance.length == 0)
+              return Center(
+                child: Text(
+                  'No Data to Display Yet.\nCome Back Soon!',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              );
             return Scrollbar(
               controller: listviewController,
               interactive: true,

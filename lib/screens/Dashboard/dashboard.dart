@@ -117,6 +117,7 @@ class _DashboardState extends State<Dashboard> {
                     /// Location
                     Container(
                       margin: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(16),
@@ -134,7 +135,22 @@ class _DashboardState extends State<Dashboard> {
                     ),
 
                     /// Attendance card
-                    AttendanceCard(size: size, userProfile: widget.userProfile),
+                    widget.userProfile.overall.total == 0
+                        ? Container(
+                            height: size.height * 0.3,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Text(
+                                  'No Data to Display Yet.\nCome Back Soon!',
+                                  style: TextStyle(fontSize: 20),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          )
+                        : AttendanceCard(
+                            size: size, userProfile: widget.userProfile),
 
                     /// Current Attendance
                     Container(
@@ -162,46 +178,55 @@ class _DashboardState extends State<Dashboard> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             width: size.width * 0.9,
-                            child: Wrap(
-                              alignment: WrapAlignment.spaceAround,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              runSpacing: 20,
-                              spacing: 10,
-                              runAlignment: WrapAlignment.center,
-                              children: [
-                                for (var att in widget.userProfile.current.logs)
-                                  Column(
+                            child: widget.userProfile.current.logs.isEmpty
+                                ? Text(
+                                    'No Attendance to Show!',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.black),
+                                  )
+                                : Wrap(
+                                    alignment: WrapAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    runSpacing: 20,
+                                    spacing: 10,
+                                    runAlignment: WrapAlignment.center,
                                     children: [
-                                      (att.available)
-                                          ? Icon(
-                                              Icons.beenhere_rounded,
-                                              color: Colors.green[900],
-                                            )
-                                          : Icon(
-                                              Icons.unpublished_outlined,
-                                              color: Colors.red[900],
+                                      for (var att
+                                          in widget.userProfile.current.logs)
+                                        Column(
+                                          children: [
+                                            (att.available)
+                                                ? Icon(
+                                                    Icons.beenhere_rounded,
+                                                    color: Colors.green[900],
+                                                  )
+                                                : Icon(
+                                                    Icons.unpublished_outlined,
+                                                    color: Colors.red[900],
+                                                  ),
+                                            AutoSizeText(
+                                              DateFormat.jm()
+                                                  .format(att.timestamp),
+                                              style: TextStyle(
+                                                  color: Colors.blueGrey[800]),
                                             ),
-                                      AutoSizeText(
-                                        DateFormat.jm().format(att.timestamp),
-                                        style: TextStyle(
-                                            color: Colors.blueGrey[800]),
-                                      ),
+                                          ],
+                                        ),
+                                      // Icon(
+                                      //   Icons.beenhere_rounded,
+                                      //   color: Colors.green[900],
+                                      // ),
+                                      // Icon(
+                                      //   Icons.beenhere_outlined,
+                                      //   color: Colors.blueGrey,
+                                      // ),
+                                      // Icon(
+                                      //   Icons.beenhere_outlined,
+                                      //   color: Colors.blueGrey,
+                                      // ),
                                     ],
                                   ),
-                                // Icon(
-                                //   Icons.beenhere_rounded,
-                                //   color: Colors.green[900],
-                                // ),
-                                // Icon(
-                                //   Icons.beenhere_outlined,
-                                //   color: Colors.blueGrey,
-                                // ),
-                                // Icon(
-                                //   Icons.beenhere_outlined,
-                                //   color: Colors.blueGrey,
-                                // ),
-                              ],
-                            ),
                           ),
                         ],
                       ),

@@ -63,32 +63,30 @@ class AttendanceCard extends StatelessWidget {
                       total: userProfile.overall.total,
                       size: size,
                       context: context),
+                  // Divider(
+                  //   color: Colors.blueGrey[900],
+                  //   thickness: 5,
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Total Classes: ${userProfile.overall.total}',
+                      style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                          fontSize: 20),
+                    ),
+                  ),
                 ],
               ),
               Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: size.width * 0.4,
-                      height: 200,
-                      child: GaugeChart.withData(
-                        absent: userProfile.overall.total -
-                            userProfile.overall.present,
-                        present: userProfile.overall.present,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Total Classes: ${userProfile.overall.total}',
-                        style: TextStyle(
-                            color: Theme.of(context).backgroundColor,
-                            fontSize: 20),
-                      ),
-                    ),
-                  ],
+                child: Container(
+                  width: size.width * 0.4,
+                  height: size.width * 0.4,
+                  child: GaugeChart.withData(
+                    absent:
+                        userProfile.overall.total - userProfile.overall.present,
+                    present: userProfile.overall.present,
+                  ),
                 ),
               ),
             ],
@@ -107,7 +105,7 @@ class AttendanceCard extends StatelessWidget {
       Color valueColor}) {
     return Container(
       padding: EdgeInsets.all(8),
-      margin: EdgeInsets.all(8),
+      margin: EdgeInsets.all(5),
       width: size.width * 0.4,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
