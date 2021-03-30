@@ -296,7 +296,7 @@ class ProfileView(Resource):
                         '$set': {
                             "overall.total": overall.get("total", 0)+1,
                             "overall.present": overall.get("present")+p_count,
-                            "current.logs": [],
+                            "current.logs": [log],
                             "current.timestamp": now,
                             "active": 1
                         }
