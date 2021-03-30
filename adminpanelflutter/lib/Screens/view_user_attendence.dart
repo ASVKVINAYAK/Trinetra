@@ -38,6 +38,7 @@ class _attendencescreen extends State<AttendenceUI> {
                         children: <Widget>[
                         Align(
                           alignment: Alignment.topCenter,
+
                         child:IconButton(
                               icon: new Icon(Icons.check),
                               iconSize: 25,

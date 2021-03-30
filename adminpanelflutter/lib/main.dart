@@ -1,3 +1,4 @@
+import 'package:adminpanelflutter/Screens/loginscreen.dart';
 import 'package:adminpanelflutter/services/loginUI.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -32,14 +33,24 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
-        "/home": (context) => LoginPage(),
+        "/home": (context) => LoginScreen2(
+          backgroundColor1: Color(0xFF444152),
+          backgroundColor2: Color(0xFF6f6c7d),
+          highlightColor: Color(0xfff65aa3),
+          foregroundColor: Colors.white,
+        ),
         "/table": (context) => TableScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginPage(),
+      home: LoginScreen2(
+        backgroundColor1: Color(0xFF444152),
+        backgroundColor2: Color(0xFF6f6c7d),
+        highlightColor: Color(0xfff65aa3),
+        foregroundColor: Colors.white,
+      ),
     );
   }
 }

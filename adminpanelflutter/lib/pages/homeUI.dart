@@ -46,41 +46,75 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
    return BaseScreen(
-      title: "Dashboard",
+     title: "Dashboard",
       body: Container(
             child: Stack(
               children: [
                 new ListView(
                   scrollDirection: Axis.vertical,
                   children: <Widget>[
-                    Transform.translate(
-                      offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
-                      child: FutureBuilder <List<UserElement>>(
-                        future: getData(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            List<UserElement> data = snapshot.data;
-                            return
-                              ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: data.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    String d=" Name:${data[index].name} \n Phone no:${data[index].phone} \n Total Attendence ${data[index].overall.present} / ${data[index].overall.total}";
-                                    return AwesomeListItem(
-                                      title: data[index].employeeId,
-                                      content: d,
-                                      color: COLORS[new Random().nextInt(5)],
-                                      image: img[new Random().nextInt(5)],
-                                    );
-                                  }
-                              );
-                          }
-                          // By default show a loading spinner.
-                          return  CircularProgressIndicator(
-                          );
-                        },
+
+                    // Center(
+                    //   child: new Transform.translate(
+                    //     offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
+                    //     child: StreamBuilder(
+                    //         stream: FirebaseFirestore.instance.collection('users').snapshots(),
+                    //         builder: (context, snapshot) {
+                    //           return new ListView.builder(
+                    //             shrinkWrap: true,
+                    //             padding: const EdgeInsets.all(0.0),
+                    //             scrollDirection: Axis.vertical,
+                    //             primary: true,
+                    //             itemCount: snapshot.data.noSuchMethod(snapshot.data.doc.length),
+                    //             itemBuilder: (context,index) {
+                    //               DocumentSnapshot fdata=snapshot.data.docs[index];
+                    //               String d="";
+                    //               d=" Name: "+fdata['name']+"\n Phone no: ${fdata['phone no']}"+"\n IMEI: "+fdata['IMEI']+"\n";
+                    //
+                    //               return AwesomeListItem(
+                    //                 title: fdata.id,
+                    //                 content: d,
+                    //                 color: COLORS[new Random().nextInt(5)],
+                    //                 image: img[new Random().nextInt(4)],
+                    //               );
+                    //             },
+                    //           );
+                    //         }
+                    //     ),
+                    //   ),
+                    // ),
+
+                    Center(
+                      child: Transform.translate(
+                        offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
+                        child: FutureBuilder <List<UserElement>>(
+                          future: getData(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              List<UserElement> data = snapshot.data;
+                              return
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: data.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      String d=" Name:${data[index].name} \n Phone no:${data[index].phone} \n Total Attendence ${data[index].overall.present} / ${data[index].overall.total}";
+                                      return AwesomeListItem(
+                                        title: data[index].employeeId,
+                                        content: d,
+                                        color: COLORS[new Random().nextInt(5)],
+                                        image: img[new Random().nextInt(5)],
+                                      );
+                                    }
+                                );
+                            }
+                            // By default show a loading spinner.
+                            return  CircularProgressIndicator();
+                          },
+                        ),
                       ),
                     ),
+
+
 
 
                   ],
@@ -147,7 +181,7 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
                   children: <Widget>[
 
                     Padding(
-                      padding: EdgeInsets.all(0.5),
+                      padding: EdgeInsets.all(20),
                       child: new Text(
                         widget.title,
                         style: TextStyle(

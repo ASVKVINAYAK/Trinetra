@@ -28,6 +28,7 @@ class _individualdata extends State<indivdualdata> {
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
                 String d = "${data[index].lat} + ${data[index].lon}  ";
+                String e="${data[index].available}";
                 return Card(
                   color: Colors.lightBlueAccent,
                   shape:RoundedRectangleBorder(
@@ -38,9 +39,10 @@ class _individualdata extends State<indivdualdata> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       IconButton(
-                        icon: new Icon(Icons.check),
-                        iconSize: 25,
-                        onPressed: () {  },
+
+                          icon: new Icon(Icons.check),
+                          iconSize: 25,
+                          onPressed: () {  },
                       ),
                       Text(d,
                       ),
