@@ -46,9 +46,9 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: LoginScreen2(
-        backgroundColor1: Color(0xFF444152),
-        backgroundColor2: Color(0xFF6f6c7d),
-        highlightColor: Color(0xfff65aa3),
+        backgroundColor1: Colors.orangeAccent,
+        backgroundColor2: Colors.orange,
+        highlightColor: Colors.white,
         foregroundColor: Colors.white,
       ),
     );

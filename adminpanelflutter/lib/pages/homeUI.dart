@@ -4,7 +4,6 @@ import 'package:adminpanelflutter/API_Models/user_attendence_data.dart';
 import 'package:adminpanelflutter/services/Userdata.dart';
 import 'package:adminpanelflutter/services/apirequest.dart';
 import 'package:http/http.dart' as http;
-import 'package:open_location_code/open_location_code.dart' as olc;
 import 'package:adminpanelflutter/common/base.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -54,36 +53,6 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin
                   scrollDirection: Axis.vertical,
                   children: <Widget>[
 
-                    // Center(
-                    //   child: new Transform.translate(
-                    //     offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
-                    //     child: StreamBuilder(
-                    //         stream: FirebaseFirestore.instance.collection('users').snapshots(),
-                    //         builder: (context, snapshot) {
-                    //           return new ListView.builder(
-                    //             shrinkWrap: true,
-                    //             padding: const EdgeInsets.all(0.0),
-                    //             scrollDirection: Axis.vertical,
-                    //             primary: true,
-                    //             itemCount: snapshot.data.noSuchMethod(snapshot.data.doc.length),
-                    //             itemBuilder: (context,index) {
-                    //               DocumentSnapshot fdata=snapshot.data.docs[index];
-                    //               String d="";
-                    //               d=" Name: "+fdata['name']+"\n Phone no: ${fdata['phone no']}"+"\n IMEI: "+fdata['IMEI']+"\n";
-                    //
-                    //               return AwesomeListItem(
-                    //                 title: fdata.id,
-                    //                 content: d,
-                    //                 color: COLORS[new Random().nextInt(5)],
-                    //                 image: img[new Random().nextInt(4)],
-                    //               );
-                    //             },
-                    //           );
-                    //         }
-                    //     ),
-                    //   ),
-                    // ),
-
                     Center(
                       child: Transform.translate(
                         offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
@@ -102,7 +71,7 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin
                                         title: data[index].employeeId,
                                         content: d,
                                         color: COLORS[new Random().nextInt(5)],
-                                        image: img[new Random().nextInt(5)],
+                                        image: "https://techspace-trinetra.herokuapp.com${data[index].photo}",
                                       );
                                     }
                                 );
@@ -225,12 +194,12 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
                 offset: Offset(20.0, 20.0),
                 child: new Card(
                   elevation: 10.0,
-                    child: CircleAvatar(
-                      radius: 50,
-                      child: Image.network(
-                          widget.image,
-                      ),
-                    ),
+                  child: CircleAvatar(
+              backgroundColor: Colors.indigo[200],
+              radius: 50,
+                    backgroundImage: NetworkImage(widget.image),
+               ),
+
 
                 ),
               ),

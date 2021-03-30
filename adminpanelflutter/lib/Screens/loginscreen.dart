@@ -55,7 +55,7 @@ class LoginScreen2 extends StatelessWidget {
                       padding: const EdgeInsets.all(16.0),
                       child: new Text(
                         "Trinatra Admin Panel",
-                        style: TextStyle(color: this.foregroundColor),
+                        style: TextStyle(color: Colors.black87),
                       ),
                     )
                   ],
@@ -94,7 +94,7 @@ class LoginScreen2 extends StatelessWidget {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Enter email',
-                        hintStyle: TextStyle(color: this.foregroundColor),
+                        hintStyle: TextStyle(color: Colors.black87),
                       ),
                     ),
                   ),
@@ -134,7 +134,7 @@ class LoginScreen2 extends StatelessWidget {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Enter password',
-                        hintStyle: TextStyle(color: this.foregroundColor),
+                        hintStyle: TextStyle(color: Colors.black87),
                       ),
                     ),
                   ),

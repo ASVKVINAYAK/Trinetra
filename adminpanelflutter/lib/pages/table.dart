@@ -26,9 +26,7 @@ class _TableScreenState extends State<TableScreen> {
   Userdetails userdetails = new Userdetails();
   var _url = 'https://techspace-trinetra.herokuapp.com/admin/map';
 
-  get olc => null;
   void _launchURL() async => await launch(_url);
-
 
   //for adding data
   adddata()
@@ -342,7 +340,7 @@ class _TableScreenState extends State<TableScreen> {
         title: "Manage",
           body: Container(
             color: Colors.white,
-            child:Expanded(
+            child:Card(
               child: GridView.count(
                 crossAxisSpacing: 50,
                 mainAxisSpacing: 40,
