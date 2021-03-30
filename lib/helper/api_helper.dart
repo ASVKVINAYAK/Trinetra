@@ -74,7 +74,7 @@ class ApiHelper {
           return null;
         }
         if (lr.firstRun) {
-          var hashIMEI = await IMEIHelper.getEncryptedIMEI();
+          var hashIMEI = await DeviceIdHelper.deviceInfoDetails();
           log(hashIMEI.toString());
           setIMEI(phone: phone.toString(), fcmToken: fcmToken, imei: hashIMEI);
         }

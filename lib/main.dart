@@ -4,8 +4,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:trinetra/constants.dart';
+import 'package:trinetra/screens/HomePage.dart';
+import 'helper/api_helper.dart';
+import 'helper/localAuth_helper.dart';
 import 'screens/splash_screen.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,11 +22,13 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Trinetra',
-      theme: darkTheme,
-      home: MessageHandler(),
+    return OverlaySupport(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Trinetra',
+        theme: darkTheme,
+        home: MessageHandler(),
+      ),
     );
   }
 }
@@ -102,15 +109,44 @@ class _MessageHandlerState extends State<MessageHandler> {
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (message.data['type'] == 'chat') {
-        // Navigator.pushNamed(context, '/chat',
-        //   arguments: ChatArguments(message));
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      if (message.data['data']['body'] == 'alert') {
+        final isAuthenticated = await LocalAuthHelper.authenticate();
+        final ApiHelper _apiHelper = new ApiHelper();
+
+        if (isAuthenticated) {
+          await _apiHelper.saveLocation(geoAddress.coordinates).then((value) =>
+              value
+                  ? Fluttertoast.showToast(
+                      msg: 'Authentication Sucessful!',
+                      backgroundColor: Colors.greenAccent)
+                  : null);
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Error Authenticating!', backgroundColor: Colors.red);
+        }
       }
     });
 
     //
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      log('onMessage: ${message.data}');
+      // show a notification at bottom of screen.
+      showSimpleNotification(
+          Text(
+            message?.data['notification']['body'] ?? 'Alert!',
+            // '${message.data['notification']['body']}\n${message.data['notification']['body']}',
+            style: TextStyle(color: Colors.white),
+          ),
+          duration: Duration(seconds: 5),
+          background: Color(0xff181926),
+          autoDismiss: false,
+          position: NotificationPosition.bottom,
+          slideDismissDirection: DismissDirection.endToStart);
+
       /// Down here is code for flutter local notification so `import package flutter_local_notification:`
       //   RemoteNotification notification = message.notification;
       //   AndroidNotification android = message.notification?.android;

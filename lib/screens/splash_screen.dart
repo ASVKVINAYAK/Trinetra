@@ -31,12 +31,12 @@ class _SplashScreenState extends State<SplashScreen> {
       isUserLoggedIn = (phone != null);
       if (!isUserLoggedIn) return;
 
-      var hashIMEI = await IMEIHelper.getEncryptedIMEI();
-      if (phone == '9090999999') hashIMEI = '12345';
-      log(hashIMEI.toString());
+      var androidId = await DeviceIdHelper.deviceInfoDetails();
+      if (phone == '9090999999') androidId = '12345';
+      log(androidId.toString());
 
       await _apiHelper.login(
-          imei: hashIMEI ?? '12345', phone: phone ?? '9090999999');
+          imei: androidId ?? '12345', phone: phone ?? '9090999999');
       profile = await _apiHelper.getProfile();
       log(profile.toJson());
     }).whenComplete(() {

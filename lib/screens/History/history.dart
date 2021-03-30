@@ -18,14 +18,6 @@ class History extends StatelessWidget {
       appBar: AppBar(
           title: Text('Your Attendance History'),
           centerTitle: true,
-          actions: [
-            // IconButton(
-            //     onPressed: () {},
-            //     icon: Icon(
-            //       Icons.refresh,
-            //       color: Colors.white,
-            //     ))
-          ],
           backgroundColor: Theme.of(context).backgroundColor),
       body: FutureBuilder<DayAttendance>(
           future: _apihelper

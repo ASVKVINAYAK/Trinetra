@@ -20,6 +20,7 @@ dependencies:
   cloud_firestore: ^1.0.1
   crypto: ^3.0.0
   cupertino_icons: ^1.0.2
+  device_info: ^2.0.0
   firebase_analytics: ^7.1.1
   firebase_auth: ^1.0.1
   firebase_core: ^1.0.1
@@ -32,6 +33,7 @@ dependencies:
   imei_plugin: ^1.2.0
   intl: any
   local_auth: ^1.1.0
+  overlay_support: ^1.2.0
   shared_preferences: ^2.0.0
 
 dev_dependencies:
