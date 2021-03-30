@@ -281,24 +281,29 @@ class ProfileView(Resource):
                 p_count = int(all([prev_log["available"]
                                    for prev_log in prev_logs]))
                 overall = user["overall"]
-                curr_logs = attendance.find_one(
-                    {"phone": resp['id']}).get("logs")
-                attendance.update_one(
-                    {"phone": resp['id']},
-                    {
-                        '$set': {"logs": curr_logs+prev_logs}
-                    })
+                # curr_logs = attendance.find_one(
+                #     {"phone": resp['id']}).get("logs")
+                # attendance.update_one(
+                #     {"phone": resp['id']},
+                #     {
+                #         '$set': {"logs": curr_logs+prev_logs}
+                #     })
                 users.update_one(
                     {'phone': resp['id']},
                     {
                         '$set': {
                             "overall.total": overall.get("total", 0)+1,
                             "overall.present": overall.get("present")+p_count,
-                            "current.logs": [log],
+                            "current.logs": [],
                             "current.timestamp": now,
                             "active": 1
                         }
                     })
+            attendance.update_one(
+                {"phone": resp['id']},
+                {
+                    '$push': {"logs": log}
+                })
 
             return jsonify({"success": True, "available": available})
         else:
