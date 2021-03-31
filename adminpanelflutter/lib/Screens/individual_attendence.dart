@@ -1,10 +1,13 @@
 import 'package:adminpanelflutter/API_Models/user_attendence_data.dart';
 import 'package:adminpanelflutter/services/apirequest.dart';
+import 'package:bubble_timeline/bubble_timeline.dart';
+import 'package:bubble_timeline/timeline_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geocoder/model.dart';
+import 'package:intl/intl.dart';
 
 
 class indivdualdata extends StatefulWidget {
@@ -45,25 +48,59 @@ class _individualdata extends State<indivdualdata> {
                 String e="${data[index].available}";
                 _determinePosition(data[index].lat,data[index].lon);
                 return Card(
-                  color: Colors.lightBlueAccent,
-                  shape:RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  elevation: 5,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      (data[index].available)
-                          ? Icon(
-                        Icons.beenhere_rounded,
-                        color: Colors.green[900],
-                      )
-                          :new Icon(Icons.check),
-                      Text(address,
-                      ),
-                    ],
-                  ),
+                  color: Colors.lightGreenAccent,
+                    shape:RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: BubbleTimeline(
+                      bubbleDiameter: 120,
+                      // List of Timeline Bubble Items
+                      items: [
+                        TimelineItem(
+                          title: '${data[index].lat} ${data[index].lon}',
+                          subtitle: "",
+                          child:  (data[index].available)
+                              ? Icon(
+                            Icons.check,
+                            size: 50,
+                            color: Colors.green[900],
+                          )
+                              : Icon(
+                            Icons.location_disabled,
+                            size: 50,
+                            color: Colors.red,
+                          ),
+                          bubbleColor: Colors.yellowAccent,
+                        ),
+                        TimelineItem(title: "sv", child: Text("bbb"), bubbleColor: Colors.pinkAccent)
+
+                      ],
+                      stripColor: Colors.teal,
+                      scaffoldColor: Colors.white,
+                    )
+
                 );
+
+                // return Card(
+                //   color: Colors.lightBlueAccent,
+                //   shape:RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(50),
+                //   ),
+                //   elevation: 5,
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: <Widget>[
+                //       (data[index].available)
+                //           ? Icon(
+                //         Icons.beenhere_rounded,
+                //         color: Colors.green[900],
+                //       )
+                //           :new Icon(Icons.check),
+                //       Text(address,
+                //       ),
+                //     ],
+                //   ),
+                // );
               },
             );
           }

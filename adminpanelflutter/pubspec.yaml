@@ -40,6 +40,10 @@ dependencies:
   url_launcher_web: ^2.0.0
   geolocator: ^7.0.1
   geocoder: ^0.2.1
+  timelines: ^0.1.0
+  google_fonts: ^2.0.0
+  bubble_timeline: ^1.0.5
+  intl: any
 
 dev_dependencies:
   flutter_test:
