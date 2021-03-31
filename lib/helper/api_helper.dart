@@ -88,13 +88,14 @@ class ApiHelper {
 
   /// Get Profile API
   Future<ProfileModel> getProfile() async {
+    log('getting Profile...');
     final String apiUrl = 'profile';
     try {
       http.Response response = await _getApiData(apiUrl);
-      // log(response.statusCode.toString());
       if (response.statusCode != 200 || response.body == null) {
         return null;
       } else {
+        log('____got Profile_____');
         // log(response.body);
         ProfileModel pm = ProfileModel.fromJson(response.body);
         return pm;
@@ -107,6 +108,7 @@ class ApiHelper {
 
   /// Get Attendance API
   Future<DayAttendance> getAttendance(String phone) async {
+    log('getting logs.....');
     final String apiUrl = 'user/$phone';
     try {
       http.Response response = await _getApiData(apiUrl);
@@ -115,6 +117,7 @@ class ApiHelper {
       } else {
         // log(response.body);
         var body = jsonDecode(response.body);
+        log('____got logs____');
         if (body['success'] == true) {
           DayAttendance attendance = DayAttendance.fromJson(response.body);
           return attendance;

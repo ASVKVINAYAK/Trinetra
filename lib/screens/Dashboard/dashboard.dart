@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -17,38 +18,40 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final ApiHelper _apiHelper = new ApiHelper();
   Future<ProfileModel> profile;
 
   @override
   void initState() {
     super.initState();
-    _refreshProfile(context);
+    _refreshProfile();
   }
 
-  Future<ProfileModel> _refreshProfile(BuildContext context) async {
-    Future<ProfileModel> _profile = _apiHelper.getProfile();
+  Future<ProfileModel> _refreshProfile() async {
+    final ApiHelper _apiHelper = new ApiHelper();
+    log('Refreshing!.....');
+    ProfileModel _profile = await _apiHelper.getProfile();
     setState(() {
-      profile = _profile;
+      profile = Future.value(_profile);
     });
+    log('Refreshed!!!');
     return _profile;
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return FutureBuilder<ProfileModel>(
-        future: profile,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData)
-            return Center(
-                child: CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
-            ));
-          return RefreshIndicator(
-            onRefresh: () => _refreshProfile(context),
-            color: Colors.blue,
-            child: Container(
+    return RefreshIndicator(
+      onRefresh: () => _refreshProfile(),
+      color: Colors.blue,
+      child: FutureBuilder<ProfileModel>(
+          future: profile,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData)
+              return Center(
+                  child: CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+              ));
+            return Container(
               height: size.height,
               width: size.width,
               child: SingleChildScrollView(
@@ -234,8 +237,8 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
               ),
-            ),
-          );
-        });
+            );
+          }),
+    );
   }
 }

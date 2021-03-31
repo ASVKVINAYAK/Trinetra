@@ -39,9 +39,9 @@ class GaugeChart extends StatelessWidget {
       // the chart will be left as a hole in the center. Adjust the start
       // angle and the arc length of the pie so it resembles a gauge.
       defaultRenderer: new charts.ArcRendererConfig(
-        arcWidth: 30,
+        arcWidth: 25,
         startAngle: 4 / 5 * pi,
-        arcLength: 7 / 5 * pi,
+        arcLength: 2.01 * pi,
       ),
     );
   }
