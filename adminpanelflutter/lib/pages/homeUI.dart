@@ -52,7 +52,21 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin
                 new ListView(
                   scrollDirection: Axis.vertical,
                   children: <Widget>[
+                    // new Transform.translate(
+                    //   offset: Offset(0.0, -56.0),
+                    //   child: new Container(
+                    //     height: 350,
+                    //     width: MediaQuery.of(context).size.width,
+                    //     child: Image.network(
+                    //       "https://raw.githubusercontent.com/ASVKVINAYAK/Trinetra/admin-panel/images/trinetra%20logo.jpeg",
+                    //       fit: BoxFit.contain,
+                    //     ),
+                    //   ),
+                    // ),
 
+                  ],
+
+                ),
                     Center(
                       child: Transform.translate(
                         offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
@@ -83,13 +97,8 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin
                       ),
                     ),
 
-
-
-
                   ],
                 ),
-              ],
-            ),
 
         ),
       );

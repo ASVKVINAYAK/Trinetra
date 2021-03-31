@@ -44,6 +44,10 @@ dependencies:
   google_fonts: ^2.0.0
   bubble_timeline: ^1.0.5
   intl: any
+  flutter_timeline: ^0.1.1+13
+  flutter_web_image_picker: ^0.0.2
+  image_picker: ^0.7.4
+  file_picker: ^3.0.0
 
 dev_dependencies:
   flutter_test:
