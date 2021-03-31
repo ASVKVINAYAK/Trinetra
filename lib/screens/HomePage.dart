@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:trinetra/constants.dart';
-import 'package:trinetra/helper/api_helper.dart';
 import 'package:trinetra/helper/localAuth_helper.dart';
 import 'package:trinetra/screens/Dashboard/dashboard.dart';
 import 'package:trinetra/screens/History/history.dart';
@@ -57,26 +55,8 @@ class _HomePageState extends State<HomePage> {
                     )
                   : History(),
               floatingActionButton: FloatingActionButton(
-                onPressed: () async {
-                  final isAuthenticated = await LocalAuthHelper.authenticate();
-                  final ApiHelper _apiHelper = new ApiHelper();
-
-                  if (isAuthenticated) {
-                    await _apiHelper.saveLocation(geoAddress.coordinates).then(
-                        (value) => value
-                            ? Fluttertoast.showToast(
-                                msg: 'Authentication Sucessful!',
-                                backgroundColor: Colors.greenAccent)
-                            : null);
-                    // Navigator.of(context).pushReplacement(
-                    //   MaterialPageRoute(builder: (context) => HomePage()),
-                    // );
-                  } else {
-                    Fluttertoast.showToast(
-                        msg: 'Error Authenticating!',
-                        backgroundColor: Colors.red);
-                  }
-                },
+                onPressed: () async =>
+                    await LocalAuthHelper.authenticateandSaveLocation(),
                 child: Icon(
                   Icons.how_to_reg,
                   color: Colors.white,

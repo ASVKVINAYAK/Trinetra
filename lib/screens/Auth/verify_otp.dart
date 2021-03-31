@@ -303,7 +303,10 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 child: Column(
                   children: [
                     isLoading
-                        ? CircularProgressIndicator()
+                        ? CircularProgressIndicator(
+                            valueColor: new AlwaysStoppedAnimation<Color>(
+                                Color(0xffBF5FFE)),
+                          )
                         : Container(
                             decoration: BoxDecoration(
                                 color: Theme.of(context).buttonColor,

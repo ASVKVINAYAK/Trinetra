@@ -41,7 +41,7 @@ class GaugeChart extends StatelessWidget {
       defaultRenderer: new charts.ArcRendererConfig(
         arcWidth: 25,
         startAngle: 4 / 5 * pi,
-        arcLength: 2.01 * pi,
+        arcLength: 2.0 * pi,
       ),
     );
   }

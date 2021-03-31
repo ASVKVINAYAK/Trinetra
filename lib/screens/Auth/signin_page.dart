@@ -139,7 +139,10 @@ class _SigninPageState extends State<SigninPage> {
               ),
               padding(15.0, 15.0),
               isLoading
-                  ? CircularProgressIndicator()
+                  ? CircularProgressIndicator(
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(Color(0xffBF5FFE)),
+                    )
                   : Container(
                       decoration: BoxDecoration(
                           color: Theme.of(context).buttonColor,
