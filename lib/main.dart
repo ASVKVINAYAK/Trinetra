@@ -105,7 +105,7 @@ class _MessageHandlerState extends State<MessageHandler> {
     log(initialMessage?.data?.toString() ?? 'No initial message');
     if (initialMessage?.data['body'] == 'alert') {
       // await Future.delayed(Duration(seconds: 2));
-      if (profile != null)
+      if (token != null)
         await LocalAuthHelper.authenticateandSaveLocation();
       else {
         await Future.delayed(Duration(seconds: 5));
