@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:math';
-
+import 'package:adminpanelflutter/API_Models/user_attendence_data.dart';
+import 'package:adminpanelflutter/services/Userdata.dart';
+import 'package:adminpanelflutter/services/apirequest.dart';
+import 'package:http/http.dart' as http;
 import 'package:adminpanelflutter/common/base.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreenUI extends StatefulWidget {
@@ -18,175 +21,79 @@ var COLORS = [
   Color(0xFFB892FF),
   Color(0xFFB892FF)
 ];
-class _HomeUI extends State<HomeScreenUI> {
 
-  void fetchdata()
-  async{
-      var r= await Dio().get('https://213.188.253.139:5001/login');
-      print("abcd");
-      print(r.data.toString());
-  }
+var img=[
+  'https://picsum.photos/125?random',
+  'https://picsum.photos/425?random',
+  'https://picsum.photos/111?random',
+  'https://picsum.photos/325?random',
+  'https://picsum.photos/225?random',
+  'https://picsum.photos/124?random',
+  'https://picsum.photos/320?random',
+  'https://picsum.photos/321?random',
 
-  var data = [
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/200?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/100?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/150?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/125?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/175?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/225?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/250?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/350?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/275?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/300?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/325?random"
-    }
-  ];
+];
+
+class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin
+{
+ @override
+ void initState() {
+   super.initState();
+ }
+
 
   @override
   Widget build(BuildContext context) {
-
-    fetchdata();
-    return BaseScreen(
-      title: "Dashboard",
+   return BaseScreen(
+     title: "Dashboard",
       body: Container(
-        child: new Stack(
-          children: <Widget>[
-            new Transform.translate(
-              offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance.collection('data').snapshots(),
-                builder: (context, snapshot) {
-                  return new ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(0.0),
-                    scrollDirection: Axis.vertical,
-                    primary: true,
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: (context,index) {
-                      DocumentSnapshot fdata=snapshot.data.docs[index];
-                      String d="";
-                      d="Name: "+fdata['name']+"\nAge: "+fdata['age']+"\n";
-                      return AwesomeListItem(
-                          title: fdata.id,
-                          content: d,
-                          color: data[index]["color"],
-                          image: data[index]["image"]);
-                    },
-                  );
-                }
-              ),
+            child: Stack(
+              children: [
+                new ListView(
+                  scrollDirection: Axis.vertical,
+                  children: <Widget>[
+
+                    Center(
+                      child: Transform.translate(
+                        offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
+                        child: FutureBuilder <List<UserElement>>(
+                          future: getData(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              List<UserElement> data = snapshot.data;
+                              return
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: data.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      String d=" Name:${data[index].name} \n Phone no:${data[index].phone} \n Total Attendence ${data[index].overall.present} / ${data[index].overall.total}";
+                                      return AwesomeListItem(
+                                        title: data[index].employeeId,
+                                        content: d,
+                                        color: COLORS[new Random().nextInt(5)],
+                                        image: "https://techspace-trinetra.herokuapp.com${data[index].photo}",
+                                      );
+                                    }
+                                );
+                            }
+                            // By default show a loading spinner.
+                            return  CircularProgressIndicator();
+                          },
+                        ),
+                      ),
+                    ),
+
+
+
+
+                  ],
+                ),
+              ],
             ),
 
-            new Transform.translate(
-              offset: Offset(0.0, -56.0),
-              child: new Container(
-                child: new ClipPath(
-                  clipper: new MyClipper(),
-                  child: new Stack(
-                    children: [
-                      Image.network(
-                        "https://raw.githubusercontent.com/ASVKVINAYAK/HC-QS/main/WhatsApp%20Image%202021-03-21%20at%207.19.14%20PM.jpeg",
-                        fit: BoxFit.fill,
-                      ),
-                      new Opacity(
-                        opacity: 0.2,
-                        child: new Container(color: COLORS[0]),
-                      ),
-                      // new Transform.translate(
-                      //   offset: Offset(0.0, 50.0),
-                      //   child: new ListTile(
-                      //     leading: new CircleAvatar(
-                      //       child: new Container(
-                      //         decoration: new BoxDecoration(
-                      //           shape: BoxShape.circle,
-                      //           color: Colors.transparent,
-                      //           image: new DecorationImage(
-                      //             fit: BoxFit.fill,
-                      //             image: NetworkImage(
-                      //                 "https://avatars2.githubusercontent.com/u/3234592?s=460&v=4"),
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //     title: new Text(
-                      //       "TRINETRA",
-                      //       style: new TextStyle(
-                      //           color: Colors.white,
-                      //           fontSize: 24.0,
-                      //           letterSpacing: 2.0),
-                      //     ),
-                      //     subtitle: new Text(
-                      //       "Admin Panel",
-                      //       style: new TextStyle(
-                      //           color: Colors.white,
-                      //           fontSize: 12.0,
-                      //           letterSpacing: 2.0),
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-          ],
         ),
-      ),
-    );
+      );
+
   }
 }
 
@@ -225,32 +132,47 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
   Widget build(BuildContext context) {
     return new Row(
       children: <Widget>[
-        new Container(width: 10.0, height: 280.0, color: widget.color),
+        new Container(width: 10.0, height: 280.0, color: Colors.yellow),
         new Expanded(
           child: new Padding(
             padding:
             const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                new Text(
-                  widget.title,
-                  style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold),
+            child: Container(
+                 width: 10.0, height: 225.0,
+              padding: EdgeInsets.all(8),
+              child: Card(
+                color: Colors.cyanAccent,
+                shape: RoundedRectangleBorder(
+                       borderRadius: BorderRadius.circular(40),
+                    ),
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+
+                    Padding(
+                      padding: EdgeInsets.all(20),
+                      child: new Text(
+                        widget.title,
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    new Padding(
+                      padding: EdgeInsets.all(10),
+                      child: new Text(
+                        widget.content,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+
+                  ],
                 ),
-                new Padding(
-                  padding: const EdgeInsets.only(top: 24.0),
-                  child: new Text(
-                    widget.content,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -269,17 +191,16 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
                 ),
               ),
               new Transform.translate(
-                offset: Offset(10.0, 20.0),
+                offset: Offset(20.0, 20.0),
                 child: new Card(
-                  elevation: 20.0,
-                  child: new Container(
-                    decoration: new BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(widget.image),
-                        )),
-                  ),
+                  elevation: 10.0,
+                  child: CircleAvatar(
+              backgroundColor: Colors.indigo[200],
+              radius: 50,
+                    backgroundImage: NetworkImage(widget.image),
+               ),
+
+
                 ),
               ),
             ],

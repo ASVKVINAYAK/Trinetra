@@ -1,7 +1,13 @@
+import 'package:adminpanelflutter/API_Models/user_attendence_data.dart';
+import 'package:adminpanelflutter/Screens/view_user_attendence.dart';
+import 'package:adminpanelflutter/pages/homeUI.dart';
+import 'package:adminpanelflutter/services/apirequest.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:adminpanelflutter/common/base.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class TableScreen extends StatefulWidget {
   @override
@@ -18,6 +24,9 @@ class Userdetails
 class _TableScreenState extends State<TableScreen> {
   final _formKey = GlobalKey<FormState>();
   Userdetails userdetails = new Userdetails();
+  var _url = 'https://techspace-trinetra.herokuapp.com/admin/map';
+
+  void _launchURL() async => await launch(_url);
 
   //for adding data
   adddata()
@@ -277,22 +286,23 @@ class _TableScreenState extends State<TableScreen> {
                                       phoneno=pno.text;
                                       imei=imeino.text;
 
-                                      // if(name=="")
-                                      //   {
-                                      //     name=tempname;
-                                      //   }
-                                      //   if(phoneno=="")
-                                      //   {
-                                      //     phoneno=tempno;
-                                      //   }
-                                      //   if(imei=="")
-                                      //   {
-                                      //     imei=tempimei;
-                                      //   }
+                                      if(name=="")
+                                        {
+                                          name=tempname;
+                                        }
+                                        if(phoneno=="")
+                                        {
+                                          phoneno=tempno;
+                                        }
+                                        if(imei=="")
+                                        {
+                                          imei=tempimei;
+                                        }
                                       Map<String, dynamic> demodata = {"name": name, "phone no": phoneno,"IMEI":imei};
                                       updata.update(demodata);
                                       Navigator.pop(context);
-                                      Navigator.pop(context);
+                                        Navigator.pop(context);
+
 
                                       Fluttertoast.showToast(
                                           msg: "User Updated Successfully",
@@ -300,7 +310,7 @@ class _TableScreenState extends State<TableScreen> {
                                           gravity: ToastGravity.BOTTOM,
                                           timeInSecForIosWeb: 5,
                                           backgroundColor: Colors.green,
-                                          textColor: Colors.white,
+                                          textColor: Colors.black87,
                                           fontSize: 16.0
                                       );
                                     },
@@ -322,32 +332,22 @@ class _TableScreenState extends State<TableScreen> {
       );
     }
 
-
-
-
-
     @override
     Widget build(BuildContext context) {
 
-    var cardtextstyle=TextStyle(fontFamily: "Montserrat Regular",fontSize: 20,color: Color.fromRGBO(63, 60, 63,1));
+    var cardtextstyle=TextStyle(fontFamily: "Montserrat Regular",fontSize: 20,color: Colors.white);
       return BaseScreen(
         title: "Manage",
           body: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.bottomLeft,
-                    end:Alignment.topRight,
-                    stops: [0.3, 0.4, 0.8, 1],
-                    colors: [Colors.amberAccent, Colors.orangeAccent, Colors.pinkAccent, Colors.red])
-            ),
-            child:Expanded(
+            color: Colors.white,
+            child:Card(
               child: GridView.count(
                 crossAxisSpacing: 50,
                 mainAxisSpacing: 40,
-                crossAxisCount: 2,
+                crossAxisCount: 3,
                 children: <Widget>[
                  Card(
-                   color: Colors.greenAccent,
+                   color: Colors.lightBlueAccent,
                    shape:RoundedRectangleBorder(
                      borderRadius: BorderRadius.circular(50),
                    ),
@@ -368,7 +368,7 @@ class _TableScreenState extends State<TableScreen> {
                  ),
 
                   Card(
-                    color: Colors.cyanAccent,
+                    color: Colors.lightBlueAccent,
                     shape:RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
@@ -378,7 +378,7 @@ class _TableScreenState extends State<TableScreen> {
                       children: <Widget>[
                         IconButton(
                           icon: new Icon(Icons.update),
-                          iconSize: 45,
+                          iconSize: 25,
                           onPressed: updatedata,
                         ),
                         Text('Update Details',
@@ -389,7 +389,7 @@ class _TableScreenState extends State<TableScreen> {
                   ),
 
                   Card(
-                    color: Colors.lightGreenAccent,
+                    color: Colors.lightBlueAccent,
                     shape:RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
@@ -399,7 +399,7 @@ class _TableScreenState extends State<TableScreen> {
                       children: <Widget>[
                         IconButton(
                           icon: new Icon(Icons.delete),
-                          iconSize: 45,
+                          iconSize: 25,
                           onPressed: deletedata,
                         ),
                         Text('Delete Details ',
@@ -408,78 +408,94 @@ class _TableScreenState extends State<TableScreen> {
                       ],
                     ),
                   ),
+
+                  Card(
+                    color: Colors.lightBlueAccent,
+                    shape:RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    elevation: 5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+
+                        IconButton(
+                          icon: new Icon(Icons.map),
+                          iconSize: 25,
+                          onPressed: _launchURL,
+                        ),
+                        Text('View Map ',
+                          style: cardtextstyle,
+                        ),
+                      ],
+                    ),
+                  ),
+
+
+
+                  Card(
+                    color: Colors.lightBlueAccent,
+                    shape:RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    elevation: 5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+
+                        IconButton(
+                          icon: new Icon(Icons.remove_red_eye),
+                          iconSize: 25,
+                          onPressed:()
+                          {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreenUI()));
+                          }
+                        ),
+                        Text('View Data',
+                          style: cardtextstyle,
+                        ),
+                      ],
+                    ),
+                  ),
+
+
+
+
+
+
+                  Card(
+                    color: Colors.lightBlueAccent,
+                    shape:RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    elevation: 5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+
+                        IconButton(
+                            icon: new Icon(Icons.check),
+                            iconSize: 25,
+                            onPressed:()
+                            {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => AttendenceUI()));
+                            }
+                        ),
+                        Text('View Attendece',
+                          style: cardtextstyle,
+                        ),
+                      ],
+                    ),
+                  ),
+
+
+
+
+
                 ],
               ),
             ),
           ),
-        // body: Container(
-        //   child:Padding(
-        //     padding:EdgeInsets.all(10),
-        //     child:Card(
-        //       color: Colors.yellow,
-        //       child: ListView(
-        //         children: <Widget>[
-        //           Card(
-        //             color: Colors.blue,
-        //             child: ListTile(
-        //               leading: FlutterLogo(size: 50),
-        //               trailing: new Column(
-        //                 children: <Widget>[
-        //                   new Container(
-        //                     child: new IconButton(
-        //                       icon: new Icon(Icons.add),
-        //                       onPressed: adddata,
-        //                     ),
-        //                     margin: EdgeInsets.only(top: 5.0),
-        //                   )
-        //                 ],
-        //               ),
-        //               title: Text('Add Details'),
-        //             ),
-        //           ),
-        //           Card(
-        //             color: Colors.amberAccent,
-        //             child: ListTile(
-        //               leading: FlutterLogo(size: 50),
-        //               title: Text('Update Details'),
-        //               trailing: new Column(
-        //                 children: <Widget>[
-        //                   new Container(
-        //                     child: new IconButton(
-        //                       icon: new Icon(Icons.update),
-        //                       onPressed: updatedata,
-        //                     ),
-        //                     margin: EdgeInsets.only(top: 5.0),
-        //                   )
-        //                 ],
-        //               ),
-        //             ),
-        //           ),
-        //           Card(
-        //             color: Colors.amber,
-        //             child: ListTile(
-        //               leading:FlutterLogo(size: 50),
-        //               title: Text('Delete Details'),
-        //               trailing: new Column(
-        //                 children: <Widget>[
-        //                   new Container(
-        //                     child: new IconButton(
-        //                       icon: new Icon(Icons.remove),
-        //                       onPressed: deletedata,
-        //                     ),
-        //                     margin: EdgeInsets.only(top: 5.0),
-        //                   )
-        //                 ],
-        //               ),
-        //
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //
-        //     ),
-        //   ),
-        // ),
       );
     }
   }
