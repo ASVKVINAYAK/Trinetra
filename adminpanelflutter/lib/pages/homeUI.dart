@@ -12,38 +12,19 @@ class HomeScreenUI extends StatefulWidget {
   _HomeUI createState() => _HomeUI();
 }
 
-// ignore: non_constant_identifier_names
-var COLORS = [
-  Color(0xFFEF7A85),
-  Color(0xFFFF90B3),
-  Color(0xFFFFC2E2),
-  Color(0xFFB892FF),
-  Color(0xFFB892FF)
-];
-
-var img = [
-  'https://picsum.photos/125?random',
-  'https://picsum.photos/425?random',
-  'https://picsum.photos/111?random',
-  'https://picsum.photos/325?random',
-  'https://picsum.photos/225?random',
-  'https://picsum.photos/124?random',
-  'https://picsum.photos/320?random',
-  'https://picsum.photos/321?random',
-];
-
 class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
   }
-
+  ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
       title: "Dashboard",
       // appBarPinned: true,
       body: Container(
+        color: Color(0xFFa8e6cf),
         // alignment: Alignment.center,
         child: FutureBuilder<UsersAttendance>(
           future: getData(),
@@ -160,95 +141,95 @@ class MyClipper extends CustomClipper<Path> {
 }
 
 // ignore: must_be_immutable
-class AwesomeListItem extends StatefulWidget {
-  String title;
-  String content;
-  Color color;
-  String image;
-
-  AwesomeListItem({this.title, this.content, this.color, this.image});
-
-  @override
-  _AwesomeListItemState createState() => new _AwesomeListItemState();
-}
-
-class _AwesomeListItemState extends State<AwesomeListItem> {
-  @override
-  Widget build(BuildContext context) {
-    return new Row(
-      children: <Widget>[
-        new Container(width: 10.0, height: 280.0, color: Colors.yellow),
-        new Expanded(
-          child: new Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-            child: Container(
-              width: 10.0,
-              height: 225.0,
-              padding: EdgeInsets.all(8),
-              child: Card(
-                color: Colors.cyanAccent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(20),
-                      child: new Text(
-                        widget.title,
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    new Padding(
-                      padding: EdgeInsets.all(10),
-                      child: new Text(
-                        widget.content,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        new Container(
-          height: 150.0,
-          width: 150.0,
-          color: Colors.white,
-          child: Stack(
-            children: <Widget>[
-              new Transform.translate(
-                offset: new Offset(50.0, 0.0),
-                child: new Container(
-                  height: 100.0,
-                  width: 100.0,
-                  color: widget.color,
-                ),
-              ),
-              new Transform.translate(
-                offset: Offset(20.0, 20.0),
-                child: new Card(
-                  elevation: 10.0,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.indigo[200],
-                    radius: 50,
-                    backgroundImage: NetworkImage(widget.image),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
+// class AwesomeListItem extends StatefulWidget {
+//   String title;
+//   String content;
+//   Color color;
+//   String image;
+//
+//   AwesomeListItem({this.title, this.content, this.color, this.image});
+//
+//   @override
+//   _AwesomeListItemState createState() => new _AwesomeListItemState();
+// }
+//
+// class _AwesomeListItemState extends State<AwesomeListItem> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return new Row(
+//       children: <Widget>[
+//         new Container(width: 10.0, height: 280.0, color: Colors.yellow),
+//         new Expanded(
+//           child: new Padding(
+//             padding:
+//                 const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+//             child: Container(
+//               width: 10.0,
+//               height: 225.0,
+//               padding: EdgeInsets.all(8),
+//               child: Card(
+//                 color: Colors.cyanAccent,
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(40),
+//                 ),
+//                 child: new Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: <Widget>[
+//                     Padding(
+//                       padding: EdgeInsets.all(20),
+//                       child: new Text(
+//                         widget.title,
+//                         style: TextStyle(
+//                             color: Colors.black87,
+//                             fontSize: 30.0,
+//                             fontWeight: FontWeight.bold),
+//                       ),
+//                     ),
+//                     new Padding(
+//                       padding: EdgeInsets.all(10),
+//                       child: new Text(
+//                         widget.content,
+//                         style: TextStyle(
+//                             color: Colors.black,
+//                             fontSize: 20.0,
+//                             fontWeight: FontWeight.bold),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//         new Container(
+//           height: 150.0,
+//           width: 150.0,
+//           color: Colors.white,
+//           child: Stack(
+//             children: <Widget>[
+//               new Transform.translate(
+//                 offset: new Offset(50.0, 0.0),
+//                 child: new Container(
+//                   height: 100.0,
+//                   width: 100.0,
+//                   color: widget.color,
+//                 ),
+//               ),
+//               new Transform.translate(
+//                 offset: Offset(20.0, 20.0),
+//                 child: new Card(
+//                   elevation: 10.0,
+//                   child: CircleAvatar(
+//                     backgroundColor: Colors.indigo[200],
+//                     radius: 50,
+//                     backgroundImage: NetworkImage(widget.image),
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }

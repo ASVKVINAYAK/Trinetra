@@ -45,7 +45,7 @@ class BaseScreen extends StatelessWidget {
                         title: Text(
                           "Trinetra Admin Panel",
                           style: TextStyle(
-                            color: Colors.black54,
+                            color: Colors.black87,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -56,7 +56,7 @@ class BaseScreen extends StatelessWidget {
                             ? this.appBarFloating
                             : false,
                         leading: constraints.maxWidth < 600 ? null : SizedBox(),
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: Color(0xFF84c1ff ),
                         iconTheme:
                             IconThemeData(color: Theme.of(context).accentColor),
                       ),

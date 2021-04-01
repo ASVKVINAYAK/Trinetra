@@ -44,12 +44,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       // home: HomeScreenUI(),
-      home: LoginScreen2(
-        backgroundColor1: Colors.orangeAccent,
-        backgroundColor2: Colors.orange,
-        highlightColor: Colors.white,
-        foregroundColor: Colors.white,
-      ),
+      home: LoginScreen2(),
     );
   }
 }

@@ -1,22 +1,37 @@
 import 'package:adminpanelflutter/pages/homeUI.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
-class LoginScreen2 extends StatelessWidget {
-  final Color backgroundColor1;
-  final Color backgroundColor2;
-  final Color highlightColor;
-  final Color foregroundColor;
 
-  LoginScreen2(
-      {Key k,
-      this.backgroundColor1,
-      this.backgroundColor2,
-      this.highlightColor,
-      this.foregroundColor});
-  final TextEditingController _emailController = TextEditingController();
+class LoginScreen2 extends StatefulWidget {
+  @override
+  _LoginScreen2 createState() =>_LoginScreen2();
+}
+class _LoginScreen2  extends State<LoginScreen2> {
+final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final Color bgColor = Color(0xff011224);
+
+
+  poppup() {
+    Alert(
+      context: context,
+      type: AlertType.info,
+      title: " Admin Details ",
+      desc: " Email is admin \nPassword is admin123",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "OK",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        )
+      ],
+    ).show();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,9 +157,10 @@ class LoginScreen2 extends StatelessWidget {
   TextButton signupButton() {
     return new TextButton(
       onPressed: () => {},
-      child: Text(
-        "Don't have an account? Create One",
-        style: TextStyle(color: bgColor),
+      child: TextButton(
+        child: Text("Don't have an account? Create One",
+        style: TextStyle(color: bgColor),),
+        onPressed: poppup,
       ),
     );
   }
@@ -171,35 +187,30 @@ class LoginScreen2 extends StatelessWidget {
               MaterialPageRoute(builder: (context) => HomeScreenUI()),
               (route) => false);
         } else {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  backgroundColor: Colors.red,
-                  title: Text('Incorrect Login details',
-                      style: TextStyle(color: Colors.black87)),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text('Try Again',
-                          style: TextStyle(color: Colors.yellowAccent)),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                );
-              });
+          Alert(
+            context: context,
+            type: AlertType.error,
+            title: " Incorrect Login Details ",
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "Try Again",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () => Navigator.pop(context),
+                width: 120,
+              )
+            ],
+          ).show();
         }
       },
       child: Text(
         "Log In",
-        style: TextStyle(color: this.foregroundColor),
+        style: TextStyle(color: Colors.white),
       ),
     );
   }
+
 }
 
 // Container(
