@@ -9,6 +9,8 @@ class NavItem extends StatefulWidget {
   final Object arguments;
   final double height;
   final Color hoveColor;
+  final Widget pushtoScreen;
+  final Function onTap;
 
   NavItem({
     this.hoveColor,
@@ -20,6 +22,8 @@ class NavItem extends StatefulWidget {
     this.subtitle,
     this.trailing,
     Key key,
+    this.pushtoScreen,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -138,12 +142,19 @@ class _NavItemState extends State<NavItem> {
           },
         ),
       ),
-      onTap: () {
-        if (this.widget.path != null) {
-          Navigator.of(context)
-              .pushNamed(this.widget.path, arguments: this.widget.arguments);
-        }
-      },
+      onTap: this.widget.onTap ??
+          () {
+            if (this.widget.path != null) {
+              Navigator.of(context).pushNamed(this.widget.path,
+                  arguments: this.widget.arguments);
+            }
+            if (this.widget.pushtoScreen != null)
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => this.widget.pushtoScreen,
+                  ));
+          },
     );
   }
 }

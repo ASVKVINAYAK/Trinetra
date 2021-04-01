@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:adminpanelflutter/common/nav_item.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Sidebar extends StatelessWidget {
   @override
@@ -35,18 +36,38 @@ class Sidebar extends StatelessWidget {
               ),
             ),
             NavItem(
-              leading: Icon(Icons.home),
-              title: Text("Home"),
-              path: "/",
+              leading: Icon(Icons.data_usage_rounded),
+              title: Text("Data"),
+              path: "/home",
             ),
             NavItem(
-              leading: Icon(Icons.list),
-              title: Text("Table"),
-              path: "/table",
+              leading: Icon(Icons.map_outlined),
+              title: Text("View/Edit Admin Map"),
+              onTap: _launchMapURL,
             ),
+            NavItem(
+              leading: Icon(Icons.person_add),
+              title: Text("Add Employee"),
+            ),
+            NavItem(
+              leading: Icon(Icons.edit),
+              title: Text("Update Details"),
+            ),
+            NavItem(
+              leading: Icon(Icons.delete_outline),
+              title: Text("Remove Employee"),
+            ),
+            // NavItem(
+            //   leading: Icon(Icons.list),
+            //   title: Text("Table"),
+            //   path: "/table",
+            // ),
           ],
         ),
       ),
     );
   }
+
+  void _launchMapURL() async =>
+      await launch('https://techspace-trinetra.herokuapp.com/admin/map');
 }

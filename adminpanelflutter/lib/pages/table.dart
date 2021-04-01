@@ -19,12 +19,12 @@ class TableScreen extends StatefulWidget {
   @override
   _TableScreenState createState() => _TableScreenState();
 }
+
 // ignore: camel_case_types
-class Userdetails
-{
-  Userdetails({this.n,this.pno});
-    String n;
-    int pno;
+class Userdetails {
+  Userdetails({this.n, this.pno});
+  String n;
+  int pno;
 }
 
 class _TableScreenState extends State<TableScreen> {
@@ -37,13 +37,12 @@ class _TableScreenState extends State<TableScreen> {
   //for adding data
   PlatformFile objFile = null;
 
-
   void chooseFileUsingFilePicker() async {
     //-----pick file by file picker,
 
     var result = await FilePicker.platform.pickFiles(
       withReadStream:
-      true, // this will return PlatformFile object with read stream
+          true, // this will return PlatformFile object with read stream
     );
     if (result != null) {
       setState(() {
@@ -52,16 +51,14 @@ class _TableScreenState extends State<TableScreen> {
     }
   }
 
-  void uploadSelectedFile(String e,String n,String p) async {
-
-    Map body = {"username": "admin",
-      "password": "admin123"};
+  void uploadSelectedFile(String e, String n, String p) async {
+    Map body = {"username": "admin", "password": "admin123"};
     var url = Uri.parse('https://techspace-trinetra.herokuapp.com/login');
     Map<String, String> headtoken = {
       'Content-type': 'application/json; charset=UTF-8',
     };
-    var restoken = await http.post(
-        url, body: jsonEncode(body), headers: headtoken);
+    var restoken =
+        await http.post(url, body: jsonEncode(body), headers: headtoken);
     var admindata = jsonDecode(restoken.body);
     String token = admindata['token'];
 
@@ -99,20 +96,17 @@ class _TableScreenState extends State<TableScreen> {
     print(result);
   }
 
-  adddata()
-  async{
-
+  adddata() async {
     TextEditingController _eid = TextEditingController();
     showDialog(
       context: context,
-      builder: (context)
-      {
+      builder: (context) {
         return AlertDialog(
           title: Text('Add Data '),
           content: TextField(
             controller: _eid,
-            decoration: InputDecoration(
-                hintText: "Enter User ID to Add details"),
+            decoration:
+                InputDecoration(hintText: "Enter User ID to Add details"),
           ),
           actions: <Widget>[
             TextButton(
@@ -123,16 +117,15 @@ class _TableScreenState extends State<TableScreen> {
             ),
             TextButton(
               child: Text('OK'),
-              onPressed: (){
-                String docid=_eid.text;
-                String name="";
-                String phoneno="";
+              onPressed: () {
+                String docid = _eid.text;
+                String name = "";
+                String phoneno = "";
                 TextEditingController nm = TextEditingController();
                 TextEditingController pno = TextEditingController();
                 showDialog(
                     context: context,
-                    builder: (context)
-                    {
+                    builder: (context) {
                       return AlertDialog(
                         content: Form(
                           key: _formKey,
@@ -140,12 +133,14 @@ class _TableScreenState extends State<TableScreen> {
                             children: <Widget>[
                               TextFormField(
                                 controller: nm,
-                                decoration: InputDecoration(labelText: ' Enter Full Name'),
+                                decoration: InputDecoration(
+                                    labelText: ' Enter Full Name'),
                               ),
                               TextFormField(
                                 controller: pno,
                                 keyboardType: TextInputType.phone,
-                                decoration: InputDecoration(labelText: 'Enter Phone No'),
+                                decoration: InputDecoration(
+                                    labelText: 'Enter Phone No'),
                               ),
                               IconButton(
                                 icon: new Icon(Icons.image),
@@ -155,17 +150,16 @@ class _TableScreenState extends State<TableScreen> {
                               Container(
                                 margin: EdgeInsets.all(10.0),
                                 child: TextButton(
-                                    onPressed: () => uploadSelectedFile(docid,nm.text,pno.text),
+                                  onPressed: () => uploadSelectedFile(
+                                      docid, nm.text, pno.text),
                                   child: Text('Submit'),
                                 ),
                               ),
                             ],
                           ),
                         ),
-
                       );
-                    }
-                );
+                    });
               },
             ),
           ],
@@ -235,175 +229,162 @@ class _TableScreenState extends State<TableScreen> {
   //     );
   //   }
 
-
-
-    @override
-    Widget build(BuildContext context) {
-
-    var cardtextstyle=TextStyle(fontFamily: "Montserrat Regular",fontSize: 20,color: Colors.white);
-      return BaseScreen(
-        title: "Manage",
-          body: Container(
-            color: Colors.white,
-            child:Card(
-              child: GridView.count(
-                crossAxisSpacing: 50,
-                mainAxisSpacing: 40,
-                crossAxisCount: 3,
-                children: <Widget>[
-                 Card(
-                   color: Colors.lightBlueAccent,
-                   shape:RoundedRectangleBorder(
-                     borderRadius: BorderRadius.circular(50),
-                   ),
-                   elevation: 5,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                   IconButton(
-                     icon: new Icon(Icons.add),
-                     iconSize: 45,
-                     onPressed: adddata,
-                   ),
-                    Text('Add Details',
-                    style: cardtextstyle,
+  @override
+  Widget build(BuildContext context) {
+    var cardtextstyle = TextStyle(
+        fontFamily: "Montserrat Regular", fontSize: 20, color: Colors.white);
+    return BaseScreen(
+      title: "Manage",
+      body: Container(
+        color: Colors.white,
+        child: Card(
+          child: GridView.count(
+            crossAxisSpacing: 50,
+            mainAxisSpacing: 40,
+            crossAxisCount: 3,
+            children: <Widget>[
+              Card(
+                color: Colors.lightBlueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                elevation: 5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                      icon: new Icon(Icons.add),
+                      iconSize: 45,
+                      onPressed: adddata,
                     ),
-                 ],
-                  ),
-                 ),
-
-                  Card(
-                    color: Colors.lightBlueAccent,
-                    shape:RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+                    Text(
+                      'Add Details',
+                      style: cardtextstyle,
                     ),
-                    elevation: 5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        IconButton(
-                          icon: new Icon(Icons.update),
-                          iconSize: 25,
-                          onPressed: adddata, // As update and add is same
-                        ),
-                        Text('Update Details',
-                          style: cardtextstyle,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Card(
-                  //   color: Colors.lightBlueAccent,
-                  //   shape:RoundedRectangleBorder(
-                  //     borderRadius: BorderRadius.circular(50),
-                  //   ),
-                  //   elevation: 5,
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: <Widget>[
-                  //       IconButton(
-                  //         icon: new Icon(Icons.delete),
-                  //         iconSize: 25,
-                  //         onPressed: deletedata,
-                  //       ),
-                  //       Text('Delete Details ',
-                  //         style: cardtextstyle,
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-
-                  Card(
-                    color: Colors.lightBlueAccent,
-                    shape:RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    elevation: 5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-
-                        IconButton(
-                          icon: new Icon(Icons.map),
-                          iconSize: 25,
-                          onPressed: _launchURL,
-                        ),
-                        Text('View Map ',
-                          style: cardtextstyle,
-                        ),
-                      ],
-                    ),
-                  ),
-
-
-
-                  Card(
-                    color: Colors.lightBlueAccent,
-                    shape:RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    elevation: 5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-
-                        IconButton(
-                          icon: new Icon(Icons.remove_red_eye),
-                          iconSize: 25,
-                          onPressed:()
-                          {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreenUI()));
-                          }
-                        ),
-                        Text('View Data',
-                          style: cardtextstyle,
-                        ),
-                      ],
-                    ),
-                  ),
-
-
-
-
-
-
-                  Card(
-                    color: Colors.lightBlueAccent,
-                    shape:RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    elevation: 5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-
-                        IconButton(
-                            icon: new Icon(Icons.check),
-                            iconSize: 25,
-                            onPressed:()
-                            {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => AttendenceUI()));
-                            }
-                        ),
-                        Text('View Attendece',
-                          style: cardtextstyle,
-                        ),
-                      ],
-                    ),
-                  ),
-
-
-
-
-
-                ],
+                  ],
+                ),
               ),
-            ),
+
+              Card(
+                color: Colors.lightBlueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                elevation: 5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                      icon: new Icon(Icons.update),
+                      iconSize: 25,
+                      onPressed: adddata, // As update and add is same
+                    ),
+                    Text(
+                      'Update Details',
+                      style: cardtextstyle,
+                    ),
+                  ],
+                ),
+              ),
+
+              // Card(
+              //   color: Colors.lightBlueAccent,
+              //   shape:RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.circular(50),
+              //   ),
+              //   elevation: 5,
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: <Widget>[
+              //       IconButton(
+              //         icon: new Icon(Icons.delete),
+              //         iconSize: 25,
+              //         onPressed: deletedata,
+              //       ),
+              //       Text('Delete Details ',
+              //         style: cardtextstyle,
+              //       ),
+              //     ],
+              //   ),
+              // ),
+
+              Card(
+                color: Colors.lightBlueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                elevation: 5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                      icon: new Icon(Icons.map),
+                      iconSize: 25,
+                      onPressed: _launchURL,
+                    ),
+                    Text(
+                      'View Map ',
+                      style: cardtextstyle,
+                    ),
+                  ],
+                ),
+              ),
+
+              Card(
+                color: Colors.lightBlueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                elevation: 5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                        icon: new Icon(Icons.remove_red_eye),
+                        iconSize: 25,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreenUI()));
+                        }),
+                    Text(
+                      'View Data',
+                      style: cardtextstyle,
+                    ),
+                  ],
+                ),
+              ),
+
+              Card(
+                color: Colors.lightBlueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                elevation: 5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                        icon: new Icon(Icons.check),
+                        iconSize: 25,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AttendenceUI()));
+                        }),
+                    Text(
+                      'View Attendece',
+                      style: cardtextstyle,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-      );
-    }
+        ),
+      ),
+    );
   }
-
-
-
+}

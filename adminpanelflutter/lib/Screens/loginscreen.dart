@@ -166,8 +166,10 @@ class LoginScreen2 extends StatelessWidget {
               textColor: Colors.white,
               webBgColor: Colors.black,
               fontSize: 16.0);
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomeScreenUI()));
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreenUI()),
+              (route) => false);
         } else {
           showDialog(
               context: context,

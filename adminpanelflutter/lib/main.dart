@@ -36,25 +36,20 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
-        "/home": (context) => LoginScreen2(
-              backgroundColor1: Color(0xFF444152),
-              backgroundColor2: Color(0xFF6f6c7d),
-              highlightColor: Color(0xfff65aa3),
-              foregroundColor: Colors.white,
-            ),
+        "/home": (context) => HomeScreenUI(),
         "/table": (context) => TableScreen(),
       },
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepPurple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreenUI(),
-      // home: LoginScreen2(
-      //   backgroundColor1: Colors.orangeAccent,
-      //   backgroundColor2: Colors.orange,
-      //   highlightColor: Colors.white,
-      //   foregroundColor: Colors.white,
-      // ),
+      // home: HomeScreenUI(),
+      home: LoginScreen2(
+        backgroundColor1: Colors.orangeAccent,
+        backgroundColor2: Colors.orange,
+        highlightColor: Colors.white,
+        foregroundColor: Colors.white,
+      ),
     );
   }
 }

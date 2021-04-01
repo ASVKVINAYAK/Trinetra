@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:adminpanelflutter/API_Models/user_attendance.dart';
+import 'package:adminpanelflutter/Screens/individual_attendence.dart';
 import 'package:adminpanelflutter/services/apirequest.dart';
 import 'package:adminpanelflutter/common/base.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -105,9 +106,16 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
           },
         ),
       ),
-      DataCell(Text(
-        _user.name,
-        style: TextStyle(fontWeight: FontWeight.bold),
+      DataCell(GestureDetector(
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => indivdualdata(ph: _user.phone),
+            )),
+        child: Text(
+          _user.name,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       )),
       DataCell(Text(_user.employeeId)),
       DataCell(Text(_user.phone)),
