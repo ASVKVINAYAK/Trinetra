@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:adminpanelflutter/API_Models/user_attendance.dart';
+
 Adduser adduserFromJson(String str) => Adduser.fromJson(json.decode(str));
 
 String adduserToJson(Adduser data) => json.encode(data.toJson());
@@ -30,64 +32,24 @@ class Adduser {
   bool success;
 
   factory Adduser.fromJson(Map<String, dynamic> json) => Adduser(
-    current: Current.fromJson(json["current"]),
-    employeeId: json["employee_id"],
-    isAdmin: json["is_admin"],
-    name: json["name"],
-    overall: Overall.fromJson(json["overall"]),
-    phone: json["phone"],
-    photo: json["photo"],
-    success: json["success"],
-  );
+        current: Current.fromJson(json["current"]),
+        employeeId: json["employee_id"],
+        isAdmin: json["is_admin"],
+        name: json["name"],
+        overall: Overall.fromJson(json["overall"]),
+        phone: json["phone"],
+        photo: json["photo"],
+        success: json["success"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "current": current.toJson(),
-    "employee_id": employeeId,
-    "is_admin": isAdmin,
-    "name": name,
-    "overall": overall.toJson(),
-    "phone": phone,
-    "photo": photo,
-    "success": success,
-  };
-}
-
-class Current {
-  Current({
-    this.logs,
-    this.timestamp,
-  });
-
-  List<dynamic> logs;
-  String timestamp;
-
-  factory Current.fromJson(Map<String, dynamic> json) => Current(
-    logs: List<dynamic>.from(json["logs"].map((x) => x)),
-    timestamp: json["timestamp"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "logs": List<dynamic>.from(logs.map((x) => x)),
-    "timestamp": timestamp,
-  };
-}
-
-class Overall {
-  Overall({
-    this.present,
-    this.total,
-  });
-
-  int present;
-  int total;
-
-  factory Overall.fromJson(Map<String, dynamic> json) => Overall(
-    present: json["present"],
-    total: json["total"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "present": present,
-    "total": total,
-  };
+        "current": current.toJson(),
+        "employee_id": employeeId,
+        "is_admin": isAdmin,
+        "name": name,
+        "overall": overall.toJson(),
+        "phone": phone,
+        "photo": photo,
+        "success": success,
+      };
 }

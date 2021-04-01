@@ -1,12 +1,10 @@
-import 'dart:convert';
-import 'dart:math';
-import 'package:adminpanelflutter/API_Models/user_attendence_data.dart';
-import 'package:adminpanelflutter/services/Userdata.dart';
+import 'dart:developer';
+import 'package:adminpanelflutter/API_Models/user_attendance.dart';
 import 'package:adminpanelflutter/services/apirequest.dart';
-import 'package:http/http.dart' as http;
 import 'package:adminpanelflutter/common/base.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreenUI extends StatefulWidget {
   @override
@@ -22,7 +20,7 @@ var COLORS = [
   Color(0xFFB892FF)
 ];
 
-var img=[
+var img = [
   'https://picsum.photos/125?random',
   'https://picsum.photos/425?random',
   'https://picsum.photos/111?random',
@@ -31,69 +29,108 @@ var img=[
   'https://picsum.photos/124?random',
   'https://picsum.photos/320?random',
   'https://picsum.photos/321?random',
-
 ];
 
-class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin
-{
- @override
- void initState() {
-   super.initState();
- }
-
+class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-   return BaseScreen(
-     title: "Dashboard",
+    return BaseScreen(
+      title: "Dashboard",
+      // appBarPinned: true,
       body: Container(
-            child: Stack(
-              children: [
-                new ListView(
-                  scrollDirection: Axis.vertical,
-                  children: <Widget>[
-
-                    Center(
-                      child: Transform.translate(
-                        offset: new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
-                        child: FutureBuilder <List<UserElement>>(
-                          future: getData(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              List<UserElement> data = snapshot.data;
-                              return
-                                ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: data.length,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      String d=" Name:${data[index].name} \n Phone no:${data[index].phone} \n Total Attendence ${data[index].overall.present} / ${data[index].overall.total}";
-                                      return AwesomeListItem(
-                                        title: data[index].employeeId,
-                                        content: d,
-                                        color: COLORS[new Random().nextInt(5)],
-                                        image: "https://techspace-trinetra.herokuapp.com${data[index].photo}",
-                                      );
-                                    }
-                                );
-                            }
-                            // By default show a loading spinner.
-                            return  CircularProgressIndicator();
-                          },
+        // alignment: Alignment.center,
+        child: FutureBuilder<UsersAttendance>(
+          future: getData(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<User> data = snapshot.data.users;
+              data.removeWhere(
+                  (element) => element == null || element.fcm == null);
+              return Container(
+                margin: const EdgeInsets.all(8.0),
+                child: Scrollbar(
+                  hoverThickness: 5,
+                  isAlwaysShown: true,
+                  child: SingleChildScrollView(
+                    child: Scrollbar(
+                      hoverThickness: 5,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          showBottomBorder: true,
+                          columns: [
+                            DataColumn(label: Text('Avatar')),
+                            DataColumn(label: Text('Name')),
+                            DataColumn(label: Text('ID')),
+                            DataColumn(label: Text('Phone')),
+                            DataColumn(label: Text('Attendance')),
+                            DataColumn(label: Text('Present/Total')),
+                            DataColumn(label: Text('Current Logs')),
+                          ],
+                          rows: [
+                            // for (var j = 0; j < 10; j++)
+                            for (var _user in data) buildDataRow(_user),
+                          ],
                         ),
                       ),
                     ),
-
-
-
-
-                  ],
+                  ),
                 ),
-              ],
-            ),
-
+              );
+            }
+            // By default show a loading spinner.
+            return Center(child: CircularProgressIndicator());
+          },
         ),
-      );
+      ),
+    );
+  }
 
+  DataRow buildDataRow(User _user) {
+    return DataRow(cells: [
+      DataCell(
+        CircleAvatar(
+          backgroundImage: NetworkImage(
+            'https://techspace-trinetra.herokuapp.com' + _user.photo,
+          ),
+          maxRadius: 25,
+          minRadius: 10,
+          onBackgroundImageError: (exception, stackTrace) {
+            log(stackTrace.toString());
+          },
+        ),
+      ),
+      DataCell(Text(
+        _user.name,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      )),
+      DataCell(Text(_user.employeeId)),
+      DataCell(Text(_user.phone)),
+      DataCell(
+        Container(
+            padding: EdgeInsets.all(5),
+            width: 50,
+            height: 30,
+            alignment: Alignment.centerRight,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: (_user.overall.present ~/ _user.overall.total * 100) > 75
+                    ? Colors.green[200]
+                    : Colors.redAccent[100]),
+            child: Text((_user.overall.present / _user.overall.total * 100)
+                .toStringAsFixed(1))),
+      ),
+      DataCell(Text('${_user.overall.present}/${_user.overall.total}')),
+      DataCell(Text(_user.current.logs
+          .map((e) => e.available ? '✔' : '❌')
+          .toList()
+          .toString())),
+    ]);
   }
 }
 
@@ -136,19 +173,19 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
         new Expanded(
           child: new Padding(
             padding:
-            const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+                const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
             child: Container(
-                 width: 10.0, height: 225.0,
+              width: 10.0,
+              height: 225.0,
               padding: EdgeInsets.all(8),
               child: Card(
                 color: Colors.cyanAccent,
                 shape: RoundedRectangleBorder(
-                       borderRadius: BorderRadius.circular(40),
-                    ),
+                  borderRadius: BorderRadius.circular(40),
+                ),
                 child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-
                     Padding(
                       padding: EdgeInsets.all(20),
                       child: new Text(
@@ -169,7 +206,6 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -195,12 +231,10 @@ class _AwesomeListItemState extends State<AwesomeListItem> {
                 child: new Card(
                   elevation: 10.0,
                   child: CircleAvatar(
-              backgroundColor: Colors.indigo[200],
-              radius: 50,
+                    backgroundColor: Colors.indigo[200],
+                    radius: 50,
                     backgroundImage: NetworkImage(widget.image),
-               ),
-
-
+                  ),
                 ),
               ),
             ],

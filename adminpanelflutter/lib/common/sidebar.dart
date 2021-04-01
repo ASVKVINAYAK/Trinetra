@@ -37,7 +37,7 @@ class Sidebar extends StatelessWidget {
             NavItem(
               leading: Icon(Icons.home),
               title: Text("Home"),
-              path: "/home",
+              path: "/",
             ),
             NavItem(
               leading: Icon(Icons.list),
