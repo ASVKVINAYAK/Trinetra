@@ -1,13 +1,19 @@
+import 'dart:convert';
+
 import 'package:adminpanelflutter/API_Models/user_attendence_data.dart';
 import 'package:adminpanelflutter/Screens/view_user_attendence.dart';
 import 'package:adminpanelflutter/pages/homeUI.dart';
 import 'package:adminpanelflutter/services/apirequest.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adminpanelflutter/common/base.dart';
+import 'package:flutter_web_image_picker/flutter_web_image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class TableScreen extends StatefulWidget {
   @override
@@ -25,312 +31,211 @@ class _TableScreenState extends State<TableScreen> {
   final _formKey = GlobalKey<FormState>();
   Userdetails userdetails = new Userdetails();
   var _url = 'https://techspace-trinetra.herokuapp.com/admin/map';
-
   void _launchURL() async => await launch(_url);
 
+  Image image;
   //for adding data
+  PlatformFile objFile = null;
+
+
+  void chooseFileUsingFilePicker() async {
+    //-----pick file by file picker,
+
+    var result = await FilePicker.platform.pickFiles(
+      withReadStream:
+      true, // this will return PlatformFile object with read stream
+    );
+    if (result != null) {
+      setState(() {
+        objFile = result.files.single;
+      });
+    }
+  }
+
+  void uploadSelectedFile(String e,String n,String p) async {
+
+    Map body = {"username": "admin",
+      "password": "admin123"};
+    var url = Uri.parse('https://techspace-trinetra.herokuapp.com/login');
+    Map<String, String> headtoken = {
+      'Content-type': 'application/json; charset=UTF-8',
+    };
+    var restoken = await http.post(
+        url, body: jsonEncode(body), headers: headtoken);
+    var admindata = jsonDecode(restoken.body);
+    String token = admindata['token'];
+
+    Map<String, String> headuser = {
+      'Content-type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    //---Create http package multipart request object
+    final request = http.MultipartRequest(
+      "POST",
+      Uri.parse("https://techspace-trinetra.herokuapp.com/register"),
+    );
+
+    request.headers['Content-type'] = "application/json; charset=UTF-8";
+    request.headers["Authorization"] = 'Bearer $token';
+    request.headers["Accept"] = 'application/json';
+
+    //-----add other fields if needed
+    request.fields["employee_id"] = e;
+    request.fields["name"] = n;
+    request.fields["phone"] = p;
+    //-----add selected file with request
+    request.files.add(new http.MultipartFile(
+        "photo", objFile.readStream, objFile.size,
+        filename: objFile.name));
+
+    //-------Send request
+    var resp = await request.send();
+
+    //------Read response
+    String result = await resp.stream.bytesToString();
+
+    //-------Your response
+    print(result);
+  }
+
   adddata()
   async{
 
     TextEditingController _eid = TextEditingController();
     showDialog(
-        context: context,
-        builder: (context)
-    {
-      return AlertDialog(
-        title: Text('Add Data '),
-        content: TextField(
-          controller: _eid,
-          decoration: InputDecoration(
-              hintText: "Enter User ID to Add details"),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text('CANCEL'),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+      context: context,
+      builder: (context)
+      {
+        return AlertDialog(
+          title: Text('Add Data '),
+          content: TextField(
+            controller: _eid,
+            decoration: InputDecoration(
+                hintText: "Enter User ID to Add details"),
           ),
-          TextButton(
+          actions: <Widget>[
+            TextButton(
+              child: Text('CANCEL'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
               child: Text('OK'),
               onPressed: (){
                 String docid=_eid.text;
                 String name="";
                 String phoneno="";
-                String imei="";
                 TextEditingController nm = TextEditingController();
                 TextEditingController pno = TextEditingController();
-                TextEditingController imeino = TextEditingController();
                 showDialog(
                     context: context,
                     builder: (context)
-                {
-                  return AlertDialog(
-                    content: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: <Widget>[
-                          TextFormField(
-                            controller: nm,
-                            decoration: InputDecoration(labelText: ' Enter Full Name'),
+                    {
+                      return AlertDialog(
+                        content: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: <Widget>[
+                              TextFormField(
+                                controller: nm,
+                                decoration: InputDecoration(labelText: ' Enter Full Name'),
+                              ),
+                              TextFormField(
+                                controller: pno,
+                                keyboardType: TextInputType.phone,
+                                decoration: InputDecoration(labelText: 'Enter Phone No'),
+                              ),
+                              IconButton(
+                                icon: new Icon(Icons.image),
+                                iconSize: 25,
+                                onPressed: () => chooseFileUsingFilePicker(),
+                              ),
+                              Container(
+                                margin: EdgeInsets.all(10.0),
+                                child: TextButton(
+                                    onPressed: () => uploadSelectedFile(docid,nm.text,pno.text),
+                                  child: Text('Submit'),
+                                ),
+                              ),
+                            ],
                           ),
-                          TextFormField(
-                            controller: pno,
-                            keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(labelText: 'Enter Phone No'),
-                          ),
-                          TextFormField(
-                            controller: imeino,
-                            decoration: InputDecoration(labelText: 'Enter IMEI No'),
-                          ),
-                          Container(
-                            margin: EdgeInsets.all(10.0),
-                            child: TextButton(
-                              onPressed: () {
-                                name=nm.text;
-                                phoneno=pno.text;
-                                imei=imeino.text;
-                                  Map<String, dynamic> demodata = {"name": name, "phone no": phoneno, "IMEI": imei};
-                                  DocumentReference documentReference = FirebaseFirestore
-                                      .instance.collection('users').doc(docid);
-                                  documentReference.set(demodata);
-                                  Navigator.pop(context);
-                                Navigator.pop(context);
-                                Fluttertoast.showToast(
-                                    msg: "User added Successfully",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 5,
-                                    backgroundColor: Colors.green,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0
-                                );
-                              },
-                              child: Text('Submit'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
 
-                  );
-                }
+                      );
+                    }
                 );
               },
-          ),
-        ],
-      );
-    },
+            ),
+          ],
+        );
+      },
     );
   }
 
-  //for deleting data
-    deletedata()
-    async{
-      TextEditingController _name = TextEditingController();
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Delete User Details'),
-            content: TextField(
-              controller: _name,
-              decoration: InputDecoration(hintText: "Enter User ID to delete details"),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('CANCEL'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              TextButton(
-                child: Text('OK'),
-                onPressed: () async {
-                  String dc=_name.text;
-                  DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection('users').doc(dc).get();
-                  bool isDocExists = docSnapshot.exists; //true if exists and false otherwise
-                  if (isDocExists== false) {
-                    Navigator.pop(context);
-                    Fluttertoast.showToast(
-                        msg: "User not found",
-                        toastLength: Toast.LENGTH_LONG,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 5,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0
-                    );
-                  }
-                  else
-                  {
-                    DocumentReference removedata = FirebaseFirestore.instance.collection('users').doc(dc);
-                    removedata.delete();
-                    Navigator.pop(context);
-                    Fluttertoast.showToast(
-                        msg: "User Deleted Successfully",
-                        toastLength: Toast.LENGTH_LONG,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 5,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0
-                    );
-                  }
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+  // //for deleting data
+  //   deletedata()
+  //   async{
+  //     TextEditingController _name = TextEditingController();
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return AlertDialog(
+  //           title: Text('Delete User Details'),
+  //           content: TextField(
+  //             controller: _name,
+  //             decoration: InputDecoration(hintText: "Enter User ID to delete details"),
+  //           ),
+  //           actions: <Widget>[
+  //             TextButton(
+  //               child: Text('CANCEL'),
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //               },
+  //             ),
+  //             TextButton(
+  //               child: Text('OK'),
+  //               onPressed: () async {
+  //                 String dc=_name.text;
+  //                 DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection('users').doc(dc).get();
+  //                 bool isDocExists = docSnapshot.exists; //true if exists and false otherwise
+  //                 if (isDocExists== false) {
+  //                   Navigator.pop(context);
+  //                   Fluttertoast.showToast(
+  //                       msg: "User not found",
+  //                       toastLength: Toast.LENGTH_LONG,
+  //                       gravity: ToastGravity.BOTTOM,
+  //                       timeInSecForIosWeb: 5,
+  //                       backgroundColor: Colors.red,
+  //                       textColor: Colors.white,
+  //                       fontSize: 16.0
+  //                   );
+  //                 }
+  //                 else
+  //                 {
+  //                   DocumentReference removedata = FirebaseFirestore.instance.collection('users').doc(dc);
+  //                   removedata.delete();
+  //                   Navigator.pop(context);
+  //                   Fluttertoast.showToast(
+  //                       msg: "User Deleted Successfully",
+  //                       toastLength: Toast.LENGTH_LONG,
+  //                       gravity: ToastGravity.BOTTOM,
+  //                       timeInSecForIosWeb: 5,
+  //                       backgroundColor: Colors.red,
+  //                       textColor: Colors.white,
+  //                       fontSize: 16.0
+  //                   );
+  //                 }
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
 
 
-    //for updating data
-    updatedata()
-    async{
-      TextEditingController _eid = TextEditingController();
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Update'),
-            content: TextField(
-              controller: _eid,
-              decoration: InputDecoration(hintText: "Enter User ID to Update details"),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('CANCEL'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              TextButton(
-                child: Text('OK'),
-                onPressed: () async {
-                  String dc=_eid.text;
-                  String name="";
-                  String imei="";
-                  String phoneno="";
-                  DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection('users').doc(dc).get();
-                  bool isDocExists = docSnapshot.exists; //true if exists and false otherwise
-                  if (isDocExists== false) {
-                    Navigator.pop(context);
-                    Fluttertoast.showToast(
-                        msg: "User not found",
-                        toastLength: Toast.LENGTH_LONG,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 5,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0
-                    );
-                  }
-                  else {
-                    DocumentReference updata = FirebaseFirestore.instance.collection('users').doc(dc);
-                  TextEditingController n = TextEditingController();
-                  TextEditingController pno = TextEditingController();
-                    TextEditingController imeino = TextEditingController();
-                  showDialog(
-                      context: context,
-                      builder: (context)
-                      {
-                        return AlertDialog(
-                          content: Form(
-                            key: _formKey,
-                            child: Column(
-                              children: <Widget>[
-                                TextFormField(
-                                  controller: n,
-                                  decoration: InputDecoration(labelText: ' Enter Full Name'),
-                                ),
-                                TextFormField(
-                                  controller: pno,
-                                  keyboardType: TextInputType.phone,
-                                  decoration: InputDecoration(labelText: 'Enter Phone no'),
-                                ),
-                                TextFormField(
-                                  controller: imeino,
-                                  decoration: InputDecoration(labelText: ' Enter IMEI no'),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.all(10.0),
-                                  child: TextButton(
-                                    onPressed: () {
-                                        String tempimei="";
-                                        String tempno="";
-                                        String tempname="";
-                                      CollectionReference collectionReference = FirebaseFirestore.instance
-                                          .collection('users');
-                                      collectionReference.snapshots().listen((snapshot) {
-                                       List doc = snapshot.docs;
-                                       int no=doc.length;
-                                       print(snapshot.docs[0].id);
-                                        int i = 0;
-                                        while (true) {
-                                          if (i >= no) {
-                                            break;
-                                          }
-                                          if(snapshot.docs[i].id==dc)
-                                            {
-                                                tempimei=snapshot.docs[i].get('IMEI');
-                                                tempno=snapshot.docs[i].get('phone no');
-                                                tempname=snapshot.docs[i].get('name');
-                                                print(snapshot.docs[i].get('IMEI'));
-                                            }
-                                          i++;
-                                        }
-                                      });
-                                      name=n.text;
-                                      phoneno=pno.text;
-                                      imei=imeino.text;
-
-                                      if(name=="")
-                                        {
-                                          name=tempname;
-                                        }
-                                        if(phoneno=="")
-                                        {
-                                          phoneno=tempno;
-                                        }
-                                        if(imei=="")
-                                        {
-                                          imei=tempimei;
-                                        }
-                                      Map<String, dynamic> demodata = {"name": name, "phone no": phoneno,"IMEI":imei};
-                                      updata.update(demodata);
-                                      Navigator.pop(context);
-                                        Navigator.pop(context);
-
-
-                                      Fluttertoast.showToast(
-                                          msg: "User Updated Successfully",
-                                          toastLength: Toast.LENGTH_LONG,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 5,
-                                          backgroundColor: Colors.green,
-                                          textColor: Colors.black87,
-                                          fontSize: 16.0
-                                      );
-                                    },
-                                    child: Text('Submit'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                  );
-                }
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
 
     @override
     Widget build(BuildContext context) {
@@ -379,7 +284,7 @@ class _TableScreenState extends State<TableScreen> {
                         IconButton(
                           icon: new Icon(Icons.update),
                           iconSize: 25,
-                          onPressed: updatedata,
+                          onPressed: adddata, // As update and add is same
                         ),
                         Text('Update Details',
                           style: cardtextstyle,
@@ -388,26 +293,26 @@ class _TableScreenState extends State<TableScreen> {
                     ),
                   ),
 
-                  Card(
-                    color: Colors.lightBlueAccent,
-                    shape:RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    elevation: 5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        IconButton(
-                          icon: new Icon(Icons.delete),
-                          iconSize: 25,
-                          onPressed: deletedata,
-                        ),
-                        Text('Delete Details ',
-                          style: cardtextstyle,
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Card(
+                  //   color: Colors.lightBlueAccent,
+                  //   shape:RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(50),
+                  //   ),
+                  //   elevation: 5,
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: <Widget>[
+                  //       IconButton(
+                  //         icon: new Icon(Icons.delete),
+                  //         iconSize: 25,
+                  //         onPressed: deletedata,
+                  //       ),
+                  //       Text('Delete Details ',
+                  //         style: cardtextstyle,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
 
                   Card(
                     color: Colors.lightBlueAccent,

@@ -2,6 +2,7 @@ import 'package:adminpanelflutter/API_Models/user_attendance.dart';
 import 'package:adminpanelflutter/services/apirequest.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_timeline/flutter_timeline.dart';
 
 import 'individual_attendence.dart';
 
@@ -11,6 +12,11 @@ class AttendenceUI extends StatefulWidget {
 }
 
 class _attendencescreen extends State<AttendenceUI> {
+  var cardtextstyle = TextStyle(
+    fontFamily: "Montserrat Regular",
+    fontSize: 20,
+    color: Colors.black87,
+  );
   @override
   Widget build(BuildContext context) {
     return new Center(
