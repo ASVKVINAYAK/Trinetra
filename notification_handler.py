@@ -3,7 +3,7 @@ import requests
 import pymongo
 import time
 import datetime
-from .app import ProfileView
+from app import ProfileView
 
 client = pymongo.MongoClient(
     "mongodb+srv://gnosticplayer:pass12345@"
