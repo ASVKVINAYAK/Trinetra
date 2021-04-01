@@ -3,6 +3,7 @@ import requests
 import pymongo
 import time
 import datetime
+from .app import ProfileView
 
 client = pymongo.MongoClient(
     "mongodb+srv://gnosticplayer:pass12345@"
@@ -10,12 +11,15 @@ client = pymongo.MongoClient(
     "?retryWrites=true&w=majority")
 db = client.hackathon
 users = db.users
-
+profile = ProfileView()
 timezone = datetime.timezone(datetime.timedelta(
     seconds=-19800), 'India Standard Time')
 
 
 def send_notification(user_token):
+    if not user_token:
+        return 400
+
     url = "https://fcm.googleapis.com/fcm/send"
 
     headers = dict()
@@ -39,9 +43,6 @@ def send_notification(user_token):
     return resp.status_code
 
 
-# send_notification("f9Uh1-ZNSjK2CPBJaMSnvz:APA91bG7Ts19ktN054UAH_ctNTcPKCnJei1c-hKjjkK1m69Z7hdDAM0oZ-0wXuGBPHQUvefQFuGxgddCUYL9kkKj7bgeXJUlR-1FIcbT-Jbsa80m8jl32Ox3AhQrvIrh9MyMqPMOsBRS")
-
-
 def ask_attendance():
     users.update_many(
         {"is_admin": False},
@@ -50,8 +51,8 @@ def ask_attendance():
                 "active": 0
             }
         })
-    [send_notification(data["fcm"])
-     for data in users.find({"active": 0}, {"fcm": 1})]
+    [send_notification(data.get("fcm"))
+     for data in users.find({"active": 0, "fcm": {"$exists": True}}, {"fcm": 1})]
 
 
 def revoke_attendance():
@@ -61,11 +62,8 @@ def revoke_attendance():
         "lat": 0, "lon": 0,
         "available": False
     }
-    users.update_many(
-        {"active": 0},
-        {
-            '$push': {"current.logs": log}
-        })
+    user_list = users.find({"active": 0}, {"phone": 1})
+    [profile.update(user["phone"], log) for user in user_list]
 
 
 if __name__ == '__main__':
@@ -78,7 +76,7 @@ if __name__ == '__main__':
                     time.sleep(10*60)
                     continue
                 else:
-                    print("Fetching Attendance at {}:{}".format(h,m))
+                    print("Fetching Attendance at {}:{}".format(h, m))
                     ask_attendance()
                     time.sleep(10*60)
                     revoke_attendance()

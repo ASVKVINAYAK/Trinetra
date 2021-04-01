@@ -235,6 +235,38 @@ class ProfileView(Resource):
         #         **json.loads(json.dumps(user, default=iso_convert))
         #     })
 
+    def update(self,user,log):
+        prev_logs = user["current"].get("logs", [])
+        # print("PREV: ", prev_logs)
+        # print("LOGS: ", len(prev_logs))
+        if len(prev_logs) < 5:
+            users.update_one(
+                {'phone': user['phone']},
+                {
+                    '$push': {"current.logs": log},
+                    '$set': {"active": 1}
+                })
+        else:
+            p_count = int(all([prev_log["available"]
+                                for prev_log in prev_logs]))
+            overall = user["overall"]
+            users.update_one(
+                {'phone': user['phone']},
+                {
+                    '$set': {
+                        "overall.total": overall.get("total", 0)+1,
+                        "overall.present": overall.get("present")+p_count,
+                        "current.logs": [log],
+                        "current.timestamp": now,
+                        "active": 1
+                    }
+                })
+        attendance.update_one(
+            {"phone": user['phone']},
+            {
+                '$push': {"logs": log}
+            })
+
     def post(self):
         auth_header = request.headers.get('Authorization')
         if auth_header:
@@ -268,45 +300,7 @@ class ProfileView(Resource):
             # timediff = datetime.datetime.strptime(
             #     now_str, datef)-user["current"].get("timestamp")
             # if (timediff < datetime.timedelta(hours=21)):
-
-            prev_logs = user["current"].get("logs", [])
-            # print("PREV: ", prev_logs)
-            # print("LOGS: ", len(prev_logs))
-            if len(prev_logs) < 5:
-                users.update_one(
-                    {'phone': resp['id']},
-                    {
-                        '$push': {"current.logs": log},
-                        '$set': {"active": 1}
-                    })
-            else:
-                p_count = int(all([prev_log["available"]
-                                   for prev_log in prev_logs]))
-                overall = user["overall"]
-                # curr_logs = attendance.find_one(
-                #     {"phone": resp['id']}).get("logs")
-                # attendance.update_one(
-                #     {"phone": resp['id']},
-                #     {
-                #         '$set': {"logs": curr_logs+prev_logs}
-                #     })
-                users.update_one(
-                    {'phone': resp['id']},
-                    {
-                        '$set': {
-                            "overall.total": overall.get("total", 0)+1,
-                            "overall.present": overall.get("present")+p_count,
-                            "current.logs": [log],
-                            "current.timestamp": now,
-                            "active": 1
-                        }
-                    })
-            attendance.update_one(
-                {"phone": resp['id']},
-                {
-                    '$push': {"logs": log}
-                })
-
+            self.update(user,log)
             return jsonify({"success": True, "available": available})
         else:
             return not_found("Some fields are missing.")
