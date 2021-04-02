@@ -152,7 +152,6 @@ class _SideScreenState  extends State<Sidebar> {
                     DialogButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        Navigator.pop(context);
                       },
                       child: Text(
                         "CANCEL",
@@ -168,7 +167,10 @@ class _SideScreenState  extends State<Sidebar> {
           ),
           DialogButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreenUI()),
+              );
             },
             child: Text(
               "CANCEL",
