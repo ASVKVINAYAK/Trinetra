@@ -139,10 +139,6 @@ class _SideScreenState  extends State<Sidebar> {
                           context,
                           MaterialPageRoute(builder: (context) => HomeScreenUI()),
                         );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomeScreenUI()),
-                        );
                       },
                       child: Text(
                         "ADD",

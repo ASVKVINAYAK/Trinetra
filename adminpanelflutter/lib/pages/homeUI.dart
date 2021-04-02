@@ -181,10 +181,6 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
                       context,
                       MaterialPageRoute(builder: (context) => HomeScreenUI()),
                     );
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeScreenUI()),
-                    );
                   },
                   child: Text(
                     "UPDATE",
