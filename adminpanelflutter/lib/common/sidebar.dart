@@ -129,8 +129,8 @@ class _SideScreenState  extends State<Sidebar> {
                                   onPressed: () {
                                     uploadSelectedFile(
                                         docid, nm.text, pno.text);
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
+                                    // Navigator.pop(context);
+                                    // Navigator.pop(context);
                                     Alert(
                                       context: context,
                                       type: AlertType.success,
@@ -142,7 +142,11 @@ class _SideScreenState  extends State<Sidebar> {
                                             "COOL",
                                             style: TextStyle(color: Colors.white, fontSize: 20),
                                           ),
-                                          onPressed: () => Navigator.pop(context),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          },
                                           width: 120,
                                         )
                                       ],
@@ -222,8 +226,6 @@ class _SideScreenState  extends State<Sidebar> {
                                   onPressed: () {
                                     uploadSelectedFile(
                                         docid, nm.text, pno.text);
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
                                     Alert(
                                       context: context,
                                       type: AlertType.success,
@@ -235,7 +237,11 @@ class _SideScreenState  extends State<Sidebar> {
                                             "COOL",
                                             style: TextStyle(color: Colors.white, fontSize: 20),
                                           ),
-                                          onPressed: () => Navigator.pop(context),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          },
                                           width: 120,
                                         )
                                       ],
