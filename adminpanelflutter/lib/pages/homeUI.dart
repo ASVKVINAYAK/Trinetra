@@ -17,6 +17,7 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
   void initState() {
     super.initState();
   }
+
   ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
@@ -24,42 +25,37 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
       title: "Dashboard",
       // appBarPinned: true,
       body: Container(
-        color: Color(0xFFa8e6cf),
-        // alignment: Alignment.center,
+        color: Colors.white,
+        alignment: Alignment.center,
         child: FutureBuilder<UsersAttendance>(
           future: getData(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List<User> data = snapshot.data.users;
-              // data.removeWhere(
-              //     (element) => element == null || element.fcm == null);
+              data.removeWhere((element) =>
+                  element == null ||
+                  element.fcm == null ||
+                  element.photo == null);
               return Container(
                 margin: const EdgeInsets.all(8.0),
-                child: Scrollbar(
-                  hoverThickness: 5,
-                  isAlwaysShown: true,
+                child: SingleChildScrollView(
                   child: SingleChildScrollView(
-                    child: Scrollbar(
-                      hoverThickness: 5,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          showBottomBorder: true,
-                          columns: [
-                            DataColumn(label: Text('Avatar')),
-                            DataColumn(label: Text('Name')),
-                            DataColumn(label: Text('ID')),
-                            DataColumn(label: Text('Phone')),
-                            DataColumn(label: Text('Attendance')),
-                            DataColumn(label: Text('Present/Total')),
-                            DataColumn(label: Text('Current Logs')),
-                          ],
-                          rows: [
-                            // for (var j = 0; j < 10; j++)
-                            for (var _user in data) buildDataRow(_user),
-                          ],
-                        ),
-                      ),
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      showBottomBorder: true,
+                      columns: [
+                        DataColumn(label: Text('Avatar')),
+                        DataColumn(label: Text('Name')),
+                        DataColumn(label: Text('ID')),
+                        DataColumn(label: Text('Phone')),
+                        DataColumn(label: Text('Attendance')),
+                        DataColumn(label: Text('Present/Total')),
+                        DataColumn(label: Text('Current Logs')),
+                      ],
+                      rows: [
+                        // for (var j = 0; j < 10; j++)
+                        for (var _user in data) buildDataRow(_user),
+                      ],
                     ),
                   ),
                 ),
@@ -108,11 +104,15 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
             alignment: Alignment.centerRight,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: (_user.overall.present ~/ _user.overall.total * 100) > 75
-                    ? Colors.green[200]
-                    : Colors.redAccent[100]),
-            child: Text((_user.overall.present / _user.overall.total * 100)
-                .toStringAsFixed(1))),
+                color: _user.overall.total == 0
+                    ? Colors.blueGrey
+                    : (_user.overall.present ~/ _user.overall.total * 100) > 75
+                        ? Colors.green[200]
+                        : Colors.redAccent[100]),
+            child: Text((_user.overall.total == 0)
+                ? 'NA'
+                : (_user.overall.present / _user.overall.total * 100)
+                    .toStringAsFixed(1))),
       ),
       DataCell(Text('${_user.overall.present}/${_user.overall.total}')),
       DataCell(Text(_user.current.logs
