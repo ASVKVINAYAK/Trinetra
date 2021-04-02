@@ -137,7 +137,8 @@ class UserView(Resource):
                         "current": {
                             "timestamp": now,
                             "logs": []
-                        }
+                        },
+                        "fcm":""
                     }
                 }, upsert=True)
             attendance.update_one(
