@@ -152,6 +152,7 @@ class _SideScreenState  extends State<Sidebar> {
                     DialogButton(
                       onPressed: () {
                         Navigator.pop(context);
+                        Navigator.pop(context);
                       },
                       child: Text(
                         "CANCEL",
