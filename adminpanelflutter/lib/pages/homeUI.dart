@@ -31,8 +31,8 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List<User> data = snapshot.data.users;
-              data.removeWhere(
-                  (element) => element == null || element.fcm == null);
+              // data.removeWhere(
+              //     (element) => element == null || element.fcm == null);
               return Container(
                 margin: const EdgeInsets.all(8.0),
                 child: Scrollbar(

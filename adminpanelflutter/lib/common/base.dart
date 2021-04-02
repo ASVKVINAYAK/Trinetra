@@ -56,7 +56,7 @@ class BaseScreen extends StatelessWidget {
                             ? this.appBarFloating
                             : false,
                         leading: constraints.maxWidth < 600 ? null : SizedBox(),
-                        backgroundColor: Color(0xFF84c1ff ),
+                        backgroundColor: Colors.white,
                         iconTheme:
                             IconThemeData(color: Theme.of(context).accentColor),
                       ),
