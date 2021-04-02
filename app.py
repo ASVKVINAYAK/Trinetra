@@ -257,7 +257,7 @@ class ProfileView(Resource):
                         "overall.total": overall.get("total", 0)+1,
                         "overall.present": overall.get("present")+p_count,
                         "current.logs": [log],
-                        "current.timestamp": now,
+                        "current.timestamp": log["timestamp"],
                         "active": 1
                     }
                 })
