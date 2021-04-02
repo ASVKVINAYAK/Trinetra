@@ -62,8 +62,8 @@ def revoke_attendance():
         "lat": 0, "lon": 0,
         "available": False
     }
-    user_list = users.find({"active": 0}, {"phone": 1})
-    [profile.update(user["phone"], log) for user in user_list]
+    user_list = users.find({"active": 0})
+    [profile.update(user, log) for user in user_list]
 
 
 if __name__ == '__main__':
