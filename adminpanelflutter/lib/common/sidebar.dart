@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:adminpanelflutter/pages/homeUI.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adminpanelflutter/common/nav_item.dart';
@@ -80,50 +81,153 @@ class _SideScreenState  extends State<Sidebar> {
 
     Alert(
         context: context,
-        title: " Fill Member Details",
+        title: " Add User details",
         content: Column(
           children: <Widget>[
             TextField(
+              controller: eid,
               decoration: InputDecoration(
                 icon: Icon(Icons.account_circle),
-                labelText: 'Enter Full Name',
+                labelText: 'Enter User ID',
               ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                icon: Icon(Icons.call),
-                labelText: 'Enter Phone no ',
-              ),
-            ),
-            IconButton(
-              icon: new Icon(Icons.image),
-              iconSize: 35,
-              onPressed: () => chooseFileUsingFilePicker(),
             ),
           ],
         ),
         buttons: [
           DialogButton(
             onPressed: () {
-              uploadSelectedFile(eid.text, nm.text, pno.text);
-              Fluttertoast.showToast(
-                  msg: "User Photo Updated Successfully",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.SNACKBAR,
-                  timeInSecForIosWeb: 5,
-                  backgroundColor: Colors.greenAccent,
-                  textColor: Colors.black87,
-                  fontSize: 16.0
-              );
+              Alert(
+                  context: context,
+                  title: " Fill Member Details",
+                  content: Column(
+                    children: <Widget>[
+                      TextField(
+                        controller: nm,
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.account_circle),
+                          labelText: 'Enter Full Name',
+                        ),
+                      ),
+                      TextField(
+                        controller: pno,
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.call),
+                          labelText: 'Enter Phone no ',
+                        ),
+                      ),
+                      IconButton(
+                        icon: new Icon(Icons.image),
+                        iconSize: 35,
+                        onPressed: () => chooseFileUsingFilePicker(),
+                      ),
+                    ],
+                  ),
+                  buttons: [
+                    DialogButton(
+                      onPressed: () {
+                        uploadSelectedFile(eid.text, nm.text, pno.text);
+                        Fluttertoast.showToast(
+                            msg: "User Added Updated Successfully",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.SNACKBAR,
+                            timeInSecForIosWeb: 5,
+                            backgroundColor: Colors.greenAccent,
+                            textColor: Colors.black87,
+                            fontSize: 16.0
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreenUI()),
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreenUI()),
+                        );
+                      },
+                      child: Text(
+                        "ADD",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    ),
+                    DialogButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "CANCEL",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    )
+                  ]).show();
+            },
+            child: Text(
+              "OK",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ),
+          DialogButton(
+            onPressed: () {
               Navigator.pop(context);
             },
             child: Text(
-              "ADD",
+              "CANCEL",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
           )
         ]).show();
+
+    //
+    // Alert(
+    //     context: context,
+    //     title: " Fill Member Details",
+    //     content: Column(
+    //       children: <Widget>[
+    //         TextField(
+    //           controller: nm,
+    //           decoration: InputDecoration(
+    //             icon: Icon(Icons.account_circle),
+    //             labelText: 'Enter Full Name',
+    //           ),
+    //         ),
+    //         TextField(
+    //           obscureText: true,
+    //           controller: pno,
+    //           decoration: InputDecoration(
+    //             icon: Icon(Icons.call),
+    //             labelText: 'Enter Phone no ',
+    //           ),
+    //         ),
+    //         IconButton(
+    //           icon: new Icon(Icons.image),
+    //           iconSize: 35,
+    //           onPressed: () => chooseFileUsingFilePicker(),
+    //         ),
+    //       ],
+    //     ),
+    //     buttons: [
+    //       DialogButton(
+    //         onPressed: () {
+    //           uploadSelectedFile(eid.text, nm.text, pno.text);
+    //           Fluttertoast.showToast(
+    //               msg: "User Photo Updated Successfully",
+    //               toastLength: Toast.LENGTH_SHORT,
+    //               gravity: ToastGravity.SNACKBAR,
+    //               timeInSecForIosWeb: 5,
+    //               backgroundColor: Colors.greenAccent,
+    //               textColor: Colors.black87,
+    //               fontSize: 16.0
+    //           );
+    //           Navigator.pop(context);
+    //         },
+    //         child: Text(
+    //           "ADD",
+    //           style: TextStyle(color: Colors.white, fontSize: 20),
+    //         ),
+    //       )
+    //     ]).show();
+
+
+
     // showDialog(
     //   context: context,
     //   builder: (context) {

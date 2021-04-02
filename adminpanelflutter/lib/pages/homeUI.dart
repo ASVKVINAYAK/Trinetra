@@ -177,10 +177,26 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
                         textColor: Colors.black87,
                         fontSize: 16.0
                     );
-                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreenUI()),
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreenUI()),
+                    );
                   },
                   child: Text(
                     "UPDATE",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
+                DialogButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "CANCEL",
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 )
