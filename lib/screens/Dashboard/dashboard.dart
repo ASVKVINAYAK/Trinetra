@@ -211,7 +211,7 @@ class _DashboardState extends State<Dashboard> {
                                                     )
                                                   : Icon(
                                                       Icons
-                                                          .unpublished_outlined,
+                                                          .highlight_remove_rounded,
                                                       color: Colors.red[900],
                                                     ),
                                               AutoSizeText(

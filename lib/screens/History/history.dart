@@ -69,7 +69,7 @@ class _HistoryState extends State<History> {
               );
             return Scrollbar(
               controller: listviewController,
-              interactive: true,
+              // interactive: true,
               thickness: 5,
               child: GroupedListView<Attendance, DateTime>(
                 controller: listviewController,
@@ -90,18 +90,21 @@ class _HistoryState extends State<History> {
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 20.0, vertical: 10.0),
                         leading: Icon(Icons.person),
-                        title: FutureBuilder<Address>(
-                          future: Geocoder.local
-                              .findAddressesFromCoordinates(
-                                  Coordinates(element.lat, element.lon))
-                              .then((value) => value.first),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<Address> snapshot) {
-                            if (!snapshot.hasData)
-                              return Text('Loading Location...');
-                            return AutoSizeText(snapshot.data.addressLine);
-                          },
-                        ),
+                        title: element.lat == 0 || element.lon == 0
+                            ? Text('No Data...!')
+                            : FutureBuilder<Address>(
+                                future: Geocoder.local
+                                    .findAddressesFromCoordinates(
+                                        Coordinates(element.lat, element.lon))
+                                    .then((value) => value.first),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<Address> snapshot) {
+                                  if (!snapshot.hasData)
+                                    return Text('Loading Location...');
+                                  return AutoSizeText(
+                                      snapshot.data.addressLine);
+                                },
+                              ),
                         trailing:
                             Text(DateFormat.jm().format(element.timestamp)),
                       ),
