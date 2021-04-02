@@ -1,11 +1,16 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:adminpanelflutter/API_Models/user_attendance.dart';
 import 'package:adminpanelflutter/Screens/individual_attendence.dart';
 import 'package:adminpanelflutter/services/apirequest.dart';
 import 'package:adminpanelflutter/common/base.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class HomeScreenUI extends StatefulWidget {
   @override
@@ -18,7 +23,80 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
     super.initState();
   }
 
-  ScrollController _scrollController = ScrollController();
+  PlatformFile objFile = null;
+  void chooseFileUsingFilePicker() async {
+    //-----pick file by file picker,
+    var result = await FilePicker.platform.pickFiles(
+      withReadStream:
+      true, // this will return PlatformFile object with read stream
+    );
+    if (result != null) {
+      setState(() {
+        objFile = result.files.single;
+      });
+    }
+  }
+  void uploadSelectedFile(String e,String n,String p) async {
+    Map body = {"username": "admin", "password": "admin123"};
+    var url = Uri.parse('https://techspace-trinetra.herokuapp.com/login');
+    Map<String, String> headtoken = {
+      'Content-type': 'application/json; charset=UTF-8',
+    };
+    var restoken =
+    await http.post(url, body: jsonEncode(body), headers: headtoken);
+    var admindata = jsonDecode(restoken.body);
+    String token = admindata['token'];
+
+    Map<String, String> headuser = {
+      'Content-type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    //---Create http package multipart request object
+    final request = http.MultipartRequest(
+      "POST",
+      Uri.parse("https://techspace-trinetra.herokuapp.com/register"),
+    );
+
+    request.headers['Content-type'] = "application/json; charset=UTF-8";
+    request.headers["Authorization"] = 'Bearer $token';
+    request.headers["Accept"] = 'application/json';
+
+    //-----add other fields if needed
+    request.fields["employee_id"] = e;
+    request.fields["name"] = n;
+    request.fields["phone"] = p;
+    //-----add selected file with request
+    request.files.add(new http.MultipartFile(
+        "photo", objFile.readStream, objFile.size,
+        filename: objFile.name));
+
+    //-------Send request
+    var resp = await request.send();
+
+    //------Read response
+    String result = await resp.stream.bytesToString();
+
+    //-------Your response
+    print(result);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
@@ -71,8 +149,45 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
 
   DataRow buildDataRow(User _user) {
     return DataRow(cells: [
-      DataCell(
-        CircleAvatar(
+      DataCell(GestureDetector(
+        onTap: ()
+        {
+          Alert(
+              context: context,
+              title: "Update Image",
+              content: Column(
+                children: <Widget>[
+                  IconButton(
+                    icon: new Icon(Icons.image),
+                    iconSize: 35,
+                    onPressed: () => chooseFileUsingFilePicker(),
+                  ),
+                ],
+              ),
+              buttons: [
+                DialogButton(
+                  onPressed: () {
+                    uploadSelectedFile(_user.employeeId,_user.name,_user.phone);
+                    Fluttertoast.showToast(
+                        msg: "User Photo Updated Successfully",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM_LEFT,
+                        timeInSecForIosWeb: 5,
+                        backgroundColor: Colors.greenAccent,
+                        textColor: Colors.black87,
+                        fontSize: 16.0
+                    );
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "UPDATE",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                )
+              ]).show();
+        },
+
+        child: CircleAvatar(
           backgroundImage: NetworkImage(
             'https://techspace-trinetra.herokuapp.com' + _user.photo,
           ),
@@ -82,7 +197,7 @@ class _HomeUI extends State<HomeScreenUI> with TickerProviderStateMixin {
             log(stackTrace.toString());
           },
         ),
-      ),
+      )),
       DataCell(GestureDetector(
         onTap: () => Navigator.push(
             context,

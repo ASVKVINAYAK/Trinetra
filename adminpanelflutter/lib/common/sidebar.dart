@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adminpanelflutter/common/nav_item.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -73,196 +74,150 @@ class _SideScreenState  extends State<Sidebar> {
   }
 
   adddata() async {
-    TextEditingController _eid = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Add Data '),
-          content: TextField(
-            controller: _eid,
-            decoration:
-            InputDecoration(hintText: "Enter User ID to Add details"),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('CANCEL'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                String docid = _eid.text;
-                String name = "";
-                String phoneno = "";
-                TextEditingController nm = TextEditingController();
-                TextEditingController pno = TextEditingController();
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: Form(
-                          key: _formKey,
-                          child: Column(
-                            children: <Widget>[
-                              TextFormField(
-                                controller: nm,
-                                decoration: InputDecoration(
-                                    labelText: ' Enter Full Name'),
-                              ),
-                              TextFormField(
-                                controller: pno,
-                                keyboardType: TextInputType.phone,
-                                decoration: InputDecoration(
-                                    labelText: 'Enter Phone No'),
-                              ),
-                              IconButton(
-                                icon: new Icon(Icons.image),
-                                iconSize: 25,
-                                onPressed: () => chooseFileUsingFilePicker(),
-                              ),
-                              Container(
-                                margin: EdgeInsets.all(10.0),
-                                child: TextButton(
-                                  onPressed: () {
-                                    uploadSelectedFile(
-                                        docid, nm.text, pno.text);
-                                    // Navigator.pop(context);
-                                    // Navigator.pop(context);
-                                    Alert(
-                                      context: context,
-                                      type: AlertType.success,
-                                      title: "New Member Added ",
-                                      desc: "${docid} Registered Successfully",
-                                      buttons: [
-                                        DialogButton(
-                                          child: Text(
-                                            "COOL",
-                                            style: TextStyle(color: Colors.white, fontSize: 20),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                          },
-                                          width: 120,
-                                        )
-                                      ],
-                                    ).show();
+    TextEditingController eid = TextEditingController();
+    TextEditingController nm = TextEditingController();
+    TextEditingController pno = TextEditingController();
 
-                                  },
-                                  child: Text('Submit'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    });
-              },
+    Alert(
+        context: context,
+        title: " Fill Member Details",
+        content: Column(
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.account_circle),
+                labelText: 'Enter Full Name',
+              ),
+            ),
+            TextField(
+              obscureText: true,
+              decoration: InputDecoration(
+                icon: Icon(Icons.call),
+                labelText: 'Enter Phone no ',
+              ),
+            ),
+            IconButton(
+              icon: new Icon(Icons.image),
+              iconSize: 35,
+              onPressed: () => chooseFileUsingFilePicker(),
             ),
           ],
-        );
-      },
-    );
-  }
-
-  updatedata() async {
-    TextEditingController _eid = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Update Data '),
-          content: TextField(
-            controller: _eid,
-            decoration:
-            InputDecoration(hintText: "Enter User ID to Update details"),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('CANCEL'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+        ),
+        buttons: [
+          DialogButton(
+            onPressed: () {
+              uploadSelectedFile(eid.text, nm.text, pno.text);
+              Fluttertoast.showToast(
+                  msg: "User Photo Updated Successfully",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.SNACKBAR,
+                  timeInSecForIosWeb: 5,
+                  backgroundColor: Colors.greenAccent,
+                  textColor: Colors.black87,
+                  fontSize: 16.0
+              );
+              Navigator.pop(context);
+            },
+            child: Text(
+              "ADD",
+              style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                String docid = _eid.text;
-                String name = "";
-                String phoneno = "";
-                TextEditingController nm = TextEditingController();
-                TextEditingController pno = TextEditingController();
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: Form(
-                          key: _formKey,
-                          child: Column(
-                            children: <Widget>[
-                              TextFormField(
-                                controller: nm,
-                                decoration: InputDecoration(
-                                    labelText: ' Enter Full Name'),
-                              ),
-                              TextFormField(
-                                controller: pno,
-                                keyboardType: TextInputType.phone,
-                                decoration: InputDecoration(
-                                    labelText: 'Enter Phone No'),
-                              ),
-                              IconButton(
-                                icon: new Icon(Icons.image),
-                                iconSize: 25,
-                                onPressed: () => chooseFileUsingFilePicker(),
-                              ),
-                              Container(
-                                margin: EdgeInsets.all(10.0),
-                                child: TextButton(
-                                  onPressed: () {
-                                    uploadSelectedFile(
-                                        docid, nm.text, pno.text);
-                                    Alert(
-                                      context: context,
-                                      type: AlertType.success,
-                                      title: " Member Updated ",
-                                      desc: "${docid} Updated succesfully Successfully",
-                                      buttons: [
-                                        DialogButton(
-                                          child: Text(
-                                            "COOL",
-                                            style: TextStyle(color: Colors.white, fontSize: 20),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          },
-                                          width: 120,
-                                        )
-                                      ],
-                                    ).show();
-                                  },
-                                  child: Text('Submit'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    });
-              },
-            ),
-          ],
-        );
-      },
-    );
+          )
+        ]).show();
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Text('Add Data '),
+    //       content: TextField(
+    //         controller: _eid,
+    //         decoration:
+    //         InputDecoration(hintText: "Enter User ID to Add details"),
+    //       ),
+    //       actions: <Widget>[
+    //         TextButton(
+    //           child: Text('CANCEL'),
+    //           onPressed: () {
+    //             Navigator.pop(context);
+    //           },
+    //         ),
+    //         TextButton(
+    //           child: Text('OK'),
+    //           onPressed: () {
+    //             String docid = _eid.text;
+    //             String name = "";
+    //             String phoneno = "";
+    //             TextEditingController nm = TextEditingController();
+    //             TextEditingController pno = TextEditingController();
+    //             showDialog(
+    //                 context: context,
+    //                 builder: (context) {
+    //                   return AlertDialog(
+    //                     content: Form(
+    //                       key: _formKey,
+    //                       child: Column(
+    //                         children: <Widget>[
+    //                           TextFormField(
+    //                             controller: nm,
+    //                             decoration: InputDecoration(
+    //                                 labelText: ' Enter Full Name'),
+    //                           ),
+    //                           TextFormField(
+    //                             controller: pno,
+    //                             keyboardType: TextInputType.phone,
+    //                             decoration: InputDecoration(
+    //                                 labelText: 'Enter Phone No'),
+    //                           ),
+    //                           IconButton(
+    //                             icon: new Icon(Icons.image),
+    //                             iconSize: 25,
+    //                             onPressed: () => chooseFileUsingFilePicker(),
+    //                           ),
+    //                           Container(
+    //                             margin: EdgeInsets.all(10.0),
+    //                             child: TextButton(
+    //                               onPressed: () {
+    //                                 uploadSelectedFile(
+    //                                     docid, nm.text, pno.text);
+    //                                 // Navigator.pop(context);
+    //                                 // Navigator.pop(context);
+    //                                 Alert(
+    //                                   context: context,
+    //                                   type: AlertType.success,
+    //                                   title: "New Member Added ",
+    //                                   desc: "${docid} Registered Successfully",
+    //                                   buttons: [
+    //                                     DialogButton(
+    //                                       child: Text(
+    //                                         "COOL",
+    //                                         style: TextStyle(color: Colors.white, fontSize: 20),
+    //                                       ),
+    //                                       onPressed: () {
+    //                                         Navigator.pop(context);
+    //                                         Navigator.pop(context);
+    //                                         Navigator.pop(context);
+    //                                       },
+    //                                       width: 120,
+    //                                     )
+    //                                   ],
+    //                                 ).show();
+    //
+    //                               },
+    //                               child: Text('Submit'),
+    //                             ),
+    //                           ),
+    //                         ],
+    //                       ),
+    //                     ),
+    //                   );
+    //                 });
+    //           },
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -310,11 +265,6 @@ class _SideScreenState  extends State<Sidebar> {
               leading: Icon(Icons.person_add),
               title: Text("Add Employee"),
               onTap: adddata,
-            ),
-            NavItem(
-              leading: Icon(Icons.edit),
-              title: Text("Update Details"),
-              onTap: updatedata,
             ),
           ],
         ),
