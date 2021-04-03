@@ -2,7 +2,7 @@
 ### Team : TechSpace
 UtkalHacks 3.0
 
-![alt text](https://github.com/ASVKVINAYAK/Trinetra/blob/main/images/trinatra%20logo.jpeg=150x150)
+![alt text](https://github.com/ASVKVINAYAK/Trinetra/blob/main/images/trinatra%20logo.jpeg)
 
 ![](https://img.shields.io/badge/Language-FLUTTER-blue)  
 
@@ -43,7 +43,7 @@ All the Employees will get notification to give attendance at the start and the 
 
 ## Trinetra App
 
-![alt text](https://github.com/ASVKVINAYAK/Trinetra/blob/main/images/app-welcome-page.jpeg=300x300)
+![alt text](https://github.com/ASVKVINAYAK/Trinetra/blob/main/images/app-welcome-page.jpeg)
 
 ![alt text](https://github.com/ASVKVINAYAK/Trinetra/blob/main/images/app-otp-page.jpeg)
 
