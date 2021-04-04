@@ -52,6 +52,9 @@ All the Employees will get notification to give attendance at the start and the 
 ![alt text](https://github.com/ASVKVINAYAK/Trinetra/blob/main/images/app-history-page.jpeg)
 
 
+![alt text](https://github.com/ASVKVINAYAK/Trinetra/blob/main/images/app.gif)
+
+
 ## Trinetra Admin Panel
 
 ![alt text](https://github.com/ASVKVINAYAK/Trinetra/blob/main/images/admin-panel-login-page.png)
