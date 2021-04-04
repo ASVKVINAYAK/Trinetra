@@ -7,8 +7,14 @@ UtkalHacks 3.0
 ![](https://img.shields.io/badge/Language-FLUTTER-blue)  
 
 [Trinetra App](https://github.com/ASVKVINAYAK/Trinetra/releases/download/1.0.0/trinetra.apk)
+User Details
+Phone no 9090999999
+OTP 123456
 
 [Trinetra Admin Panel](https://trinetra-admin-panel.netlify.app)
+Admin Details
+Email admin
+Password admin123
 
 ## **Team Members**
 * Adarsh Padhi
